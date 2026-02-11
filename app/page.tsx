@@ -13,6 +13,24 @@ import { useTypingEffect } from "@/hooks/use-typing-effect"
 import { SkillsCarousel } from "@/components/skills-carousel"
 import { ProjectCarousel } from "@/components/project-carousel"
 import { MobileNav } from "@/components/mobile-nav"
+import LogoLoop from "@/components/logo-loop"
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiPostgresql, SiSupabase, SiN8N, SiJavascript, SiHtml5, SiCss3, SiGit, SiMysql } from 'react-icons/si';
+
+const techLogos = [
+  { node: <SiReact />, title: "React", href: "https://react.dev" },
+  { node: <SiNextdotjs />, title: "Next.js", href: "https://nextjs.org" },
+  { node: <SiTypescript />, title: "TypeScript", href: "https://www.typescriptlang.org" },
+  { node: <SiTailwindcss />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
+  { node: <SiPython />, title: "Python", href: "https://www.python.org" },
+  { node: <SiPostgresql />, title: "PostgreSQL", href: "https://www.postgresql.org" },
+  { node: <SiSupabase />, title: "Supabase", href: "https://supabase.com" },
+  { node: <SiN8N />, title: "n8n", href: "https://n8n.io" },
+  { node: <SiJavascript />, title: "JavaScript", href: "https://javascript.info" },
+  { node: <SiHtml5 />, title: "HTML5", href: "https://developer.mozilla.org/en-US/docs/Web/HTML" },
+  { node: <SiCss3 />, title: "CSS3", href: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
+  { node: <SiGit />, title: "Git", href: "https://git-scm.com" },
+  { node: <SiMysql />, title: "MySQL", href: "https://www.mysql.com" },
+];
 
 const navItems = [
   { id: "sobre", label: "Sobre" },
@@ -554,6 +572,20 @@ export default function Portfolio() {
               <div className="relative">
                 {/* Decorative gradient */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent blur-3xl" />
+
+                <div className="py-8">
+                  <LogoLoop
+                    logos={techLogos}
+                    speed={40}
+                    direction="left"
+                    logoHeight={50}
+                    gap={100}
+                    hoverSpeed={0}
+                    scaleOnHover
+                    fadeOut
+                    ariaLabel="Tecnologias"
+                  />
+                </div>
 
                 <SkillsCarousel skills={skills} />
               </div>
