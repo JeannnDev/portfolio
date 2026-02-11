@@ -24,19 +24,6 @@ interface SkillsCarouselProps {
     skills: Skill[]
 }
 
-function StarRating({ level }: { level: number }) {
-    return (
-        <div className="flex gap-0.5">
-            {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                    key={star}
-                    className={`h-3 w-3 ${star <= level ? "fill-primary text-primary" : "text-muted-foreground/30"}`}
-                />
-            ))}
-        </div>
-    )
-}
-
 export function SkillsCarousel({ skills }: SkillsCarouselProps) {
     const plugin = React.useRef(
         Autoplay({ delay: 3000, stopOnInteraction: true })
@@ -61,15 +48,17 @@ export function SkillsCarousel({ skills }: SkillsCarouselProps) {
                                 <CardContent className="flex flex-col items-center justify-center p-6 gap-3">
                                     <div className="relative w-16 h-16 group-hover:scale-110 transition-transform duration-300">
                                         <div className="absolute inset-0 bg-primary/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                        <Image
-                                            src={skill.icon || "/placeholder.svg"}
-                                            alt={skill.name}
-                                            fill
-                                            className="object-contain relative z-10"
-                                        />
+                                        <div className="relative w-12 h-12 mx-auto">
+                                            <Image
+                                                src={skill.icon}
+                                                alt={skill.name}
+                                                fill
+                                                className="object-contain"
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="text-center space-y-2">
-                                        <span className="font-semibold text-sm group-hover:text-primary transition-colors">
+                                    <div className="text-center space-y-1">
+                                        <span className="font-semibold text-sm group-hover:text-primary transition-colors block">
                                             {skill.name}
                                         </span>
                                         {skill.category && (
@@ -78,7 +67,6 @@ export function SkillsCarousel({ skills }: SkillsCarouselProps) {
                                             </span>
                                         )}
                                     </div>
-                                    <StarRating level={skill.level} />
                                 </CardContent>
                             </Card>
                         </div>

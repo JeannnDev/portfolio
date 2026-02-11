@@ -11,6 +11,7 @@ import { ScrollProgress } from "@/components/scroll-progress"
 import { AnimatedSection } from "@/components/animated-section"
 import { useTypingEffect } from "@/hooks/use-typing-effect"
 import { SkillsCarousel } from "@/components/skills-carousel"
+import { ProjectCarousel } from "@/components/project-carousel"
 import { MobileNav } from "@/components/mobile-nav"
 
 const navItems = [
@@ -45,6 +46,41 @@ const certificates = [
 ]
 
 const projects = [
+  {
+    title: "Módulo de Solicitação de Compras",
+    description: "Sistema de criação de SCs com motor de validação inteligente que previne erros de classificação contábil. Interface master-detail para múltiplos itens, validação cruzada entre tipos de material/centros de custo/naturezas, e integração bidirecional com TOTVS Protheus (SC1).",
+    images: ["/images/purchase1.png", "/images/purchase2.png"],
+    tags: ["Next.js", "TOTVS Protheus", "Zod", "React Hook Form", "Validation Engine", "ERP"],
+    github: "#",
+  },
+  {
+    title: "Módulo de Transferência de Estoque",
+    description: "Sistema full-stack para orquestrar movimentações internas de estoque com integração TOTVS Protheus. Validações em tempo real de saldos (SB2), controle de rastro/endereçamento (bins), formulários condicionais e execução de rotinas automáticas (ExecAuto) para efetivação no ERP.",
+    images: ["/images/transfer1.png", "/images/transfer2.png"],
+    tags: ["Next.js", "TOTVS Protheus", "Server Actions", "Zod", "React Hook Form", "ERP"],
+    github: "#",
+  },
+  {
+    title: "Controle de Produção Industrial (Shop Floor)",
+    description: "Sistema web para apontamento de produção em chão de fábrica com integração ERP TOTVS Protheus. Controle de OPs, perdas, setup de máquinas e impressão térmica de etiquetas ZPL. Interface otimizada para tablets industriais com validações robustas e sincronização em tempo real.",
+    images: ["/images/shopfloor1.png", "/images/shopfloor2.png", "/images/shopfloor3.png", "/images/shopfloor4.png", "/images/shopfloor5.png", "/images/shopfloor6.png"],
+    tags: ["Next.js", "TOTVS API", "React 19", "TypeScript", "ZPL Print", "ERP Integration"],
+    github: "#",
+  },
+  {
+    title: "Sistema de Gestão de Projetos (PMS)",
+    description: "Plataforma avançada de gerenciamento com 3 visualizações interativas (Kanban drag-and-drop, Gantt customizado e Lista editável). Colaboração em tempo real via Socket.io, hierarquia infinita de sub-projetos e controle granular de permissões ACL.",
+    images: ["/images/pms1.png", "/images/pms2.png", "/images/pms3.png", "/images/pms4.png"],
+    tags: ["Next.js 14", "Socket.io", "dnd-kit", "TypeScript", "Custom Gantt", "Real-time"],
+    github: "#",
+  },
+  {
+    title: "Sistema de Gestão de Frota",
+    description: "Plataforma completa para gerenciamento de solicitações de veículos com fluxo de aprovação multinível, check-in/out, upload de comprovantes e exportação de relatórios. Interface responsiva com tabelas no desktop e cards otimizados para mobile.",
+    images: ["/images/frota1.png", "/images/frota2.png"],
+    tags: ["Next.js 14", "TypeScript", "Server Actions", "Shadcn UI", "Zod", "React Hook Form"],
+    github: "#",
+  },
   {
     title: "Gerador de SVG Interativo",
     description: "Aplicativo desktop que processa arquivos SVG e gera versões interativas e dinâmicas para web, facilitando visualização de dados gráficos.",
@@ -260,49 +296,56 @@ export default function Portfolio() {
       </div>
 
       {/* Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-background/80 backdrop-blur-xl border-b border-border/50" : ""}`}>
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+        ? "py-3 bg-background/70 backdrop-blur-md border-b border-border/40 shadow-[0_2px_20px_-10px_rgba(0,0,0,0.1)]"
+        : "py-5 bg-transparent"
+        }`}>
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="h-16 lg:h-20 flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <button
               onClick={() => scrollToSection("sobre")}
-              className="flex items-center gap-3 group"
+              className="flex items-center gap-4 group"
             >
-              <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-sm ring-1 ring-border/50 group-hover:ring-primary/50 transition-all bg-background">
+              <div className="relative h-11 w-11 overflow-hidden rounded-2xl shadow-lg ring-1 ring-border/50 group-hover:ring-primary/50 transition-all duration-500 bg-card group-hover:shadow-primary/20">
                 <Image
                   src="/logo.png"
                   alt="Logo Jean Correa"
                   fill
-                  className="object-cover scale-125"
+                  className="object-cover scale-110 group-hover:scale-125 transition-transform duration-500"
                 />
               </div>
-              <div className="flex flex-col items-start leading-none">
-                <span className="text-base font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">Jean Correa</span>
-                <span className="text-[10px] text-muted-foreground font-medium tracking-[0.2em] uppercase">Portfolio</span>
+              <div className="flex flex-col items-start -space-y-0.5">
+                <span className="text-lg font-extrabold tracking-tight text-foreground group-hover:text-primary transition-colors">Jean Correa</span>
+                <span className="text-[10px] text-muted-foreground font-semibold tracking-[0.3em] uppercase opacity-70">Portfolio</span>
               </div>
             </button>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-1 p-1 rounded-full bg-muted/20 backdrop-blur-sm border border-border/30">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`relative px-4 py-2 text-sm font-medium transition-colors ${activeSection === item.id
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                  className={`relative px-5 py-2 text-sm font-medium transition-all duration-300 rounded-full ${activeSection === item.id
+                    ? "text-primary bg-primary/10 shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                     }`}
                 >
                   {item.label}
                   {activeSection === item.id && (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+                    <span
+                      className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-primary rounded-full"
+                      style={{ transform: 'translateY(-2px)' }}
+                    />
                   )}
                 </button>
               ))}
+              <div className="w-px h-4 bg-border/50 mx-2" />
               <ThemeToggle />
             </nav>
 
             {/* Mobile Header Actions */}
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center gap-2">
               <ThemeToggle />
             </div>
           </div>
@@ -316,12 +359,12 @@ export default function Portfolio() {
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
               {/* Left Column - Text */}
               <div className="order-2 lg:order-1">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6">
-                  <span className="relative flex h-2 w-2">
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 mb-4">
+                  <span className="relative flex h-1.5 w-1.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
                   </span>
-                  <span className="text-xs font-medium text-primary">Disponivel para projetos</span>
+                  <span className="text-[11px] font-medium text-primary">Disponível para projetos</span>
                 </div>
 
                 <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 leading-tight">
@@ -332,17 +375,17 @@ export default function Portfolio() {
                   </span>
                 </h1>
 
-                <p className="text-lg lg:text-xl text-muted-foreground mb-8 leading-relaxed max-w-lg">
+                <p className="text-base lg:text-xl text-muted-foreground mb-6 leading-relaxed max-w-lg">
                   Graduando em <span className="text-foreground font-medium">Engenharia de Software</span> com foco em Backend, Automação e Integrações.
                   Especialista em <span className="text-foreground font-medium">Supabase</span>, <span className="text-foreground font-medium">PostgreSQL</span>, <span className="text-foreground font-medium">APIs REST</span> e <span className="text-foreground font-medium">PM2</span>.
                 </p>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                   {stats.map((stat, index) => (
-                    <div key={index} className="text-center p-3 rounded-lg bg-card/50 border border-border/50">
-                      <div className="text-2xl font-bold text-primary">{stat.value}</div>
-                      <div className="text-[10px] text-muted-foreground uppercase tracking-wider">{stat.label}</div>
+                    <div key={index} className="text-center p-2.5 rounded-lg bg-card/50 border border-border/50">
+                      <div className="text-xl sm:text-2xl font-bold text-primary">{stat.value}</div>
+                      <div className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider leading-tight">{stat.label}</div>
                     </div>
                   ))}
                 </div>
@@ -368,13 +411,13 @@ export default function Portfolio() {
                   {/* About Card */}
                   <Card className="relative bg-card/80 backdrop-blur border-border/50 max-w-sm">
                     <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0">
-                          <Code2 className="h-8 w-8 text-primary" />
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0">
+                          <Code2 className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-lg">Jean Correa</h3>
-                          <p className="text-sm text-muted-foreground">Backend Developer</p>
+                          <h3 className="font-semibold text-base sm:text-lg">Jean Correa</h3>
+                          <p className="text-xs sm:text-sm text-muted-foreground">Backend Developer</p>
                         </div>
                       </div>
 
@@ -446,14 +489,19 @@ export default function Portfolio() {
             </AnimatedSection>
 
             {/* Filter Tags */}
+            {/* Filter Tags - Modern Scrollable Bar */}
             <AnimatedSection animation="fade-up" delay={100}>
-              <div className="relative mb-10">
-                <div className="flex overflow-x-auto pb-2 gap-2 scrollbar-hide -mx-4 px-4 md:flex-wrap md:justify-center md:mx-0 md:px-0 md:overflow-visible">
+              <div className="relative mb-10 group">
+                {/* Mobile Gradient Fades */}
+                <div className="absolute left-0 top-0 bottom-2 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none md:hidden" />
+                <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none md:hidden" />
+
+                <div className="flex overflow-x-auto pb-4 gap-2 scrollbar-hide -mx-4 px-4 md:flex-wrap md:justify-center md:mx-0 md:px-0 md:overflow-visible">
                   <button
                     onClick={() => setSelectedFilter(null)}
-                    className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${selectedFilter === null
-                      ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
-                      : "bg-background text-muted-foreground border-border hover:border-primary/50 hover:text-foreground hover:bg-muted/30"
+                    className={`whitespace-nowrap px-5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 border ${selectedFilter === null
+                      ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20 scale-105"
+                      : "bg-card/80 backdrop-blur-sm hover:bg-muted text-muted-foreground border-border/50 hover:border-primary/50 hover:text-foreground"
                       }`}
                   >
                     Todos
@@ -462,36 +510,30 @@ export default function Portfolio() {
                     <button
                       key={tag}
                       onClick={() => setSelectedFilter(tag)}
-                      className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border flex items-center gap-2 ${selectedFilter === tag
-                        ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
-                        : "bg-background text-muted-foreground border-border hover:border-primary/50 hover:text-foreground hover:bg-muted/30"
+                      className={`whitespace-nowrap px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 border flex items-center gap-2 ${selectedFilter === tag
+                        ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20 scale-105"
+                        : "bg-card/80 backdrop-blur-sm hover:bg-muted text-muted-foreground border-border/50 hover:border-primary/50 hover:text-foreground"
                         }`}
                     >
                       {tag}
-                      {selectedFilter === tag && <X className="h-3 w-3" />}
+                      {/* {selectedFilter === tag && <Check className="h-3 w-3" />} */}
                     </button>
                   ))}
                 </div>
-                <div className="absolute right-0 top-0 bottom-2 w-12 bg-gradient-to-l from-background to-transparent pointer-events-none md:hidden" />
               </div>
             </AnimatedSection>
 
             {/* Projects Container - Horizontal Scroll on Mobile, Grid on Desktop */}
-            <div className="flex overflow-x-auto snap-x-mandatory gap-4 -mx-4 px-4 pb-4 md:pb-0 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 scrollbar-hide md:overflow-visible">
-              {filteredProjects.map((project, index) => (
-                <div key={index} className="flex-none w-[85vw] md:w-auto snap-center">
-                  <AnimatedSection key={index} animation="fade-up" delay={index * 100} className="h-full">
-                    <ProjectCard project={project} index={index} />
-                  </AnimatedSection>
+            {/* Projects Carousel */}
+            <div className="w-full">
+              {filteredProjects.length > 0 ? (
+                <ProjectCarousel filteredProjects={filteredProjects} />
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">Nenhum projeto encontrado com essa tecnologia.</p>
                 </div>
-              ))}
+              )}
             </div>
-
-            {filteredProjects.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">Nenhum projeto encontrado com essa tecnologia.</p>
-              </div>
-            )}
           </div>
         </section>
 
