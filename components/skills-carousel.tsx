@@ -35,34 +35,34 @@ export function SkillsCarousel({ skills }: SkillsCarouselProps) {
                 align: "start",
                 loop: true,
             }}
-            plugins={[plugin.current]}
+            plugins={[]}
             className="w-full"
             onMouseEnter={() => plugin.current.stop()}
             onMouseLeave={() => plugin.current.play()}
         >
             <CarouselContent className="-ml-2 md:-ml-4">
                 {skills.map((skill, index) => (
-                    <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
-                        <div className="p-1">
-                            <Card className="group bg-card/50 backdrop-blur border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 h-full">
-                                <CardContent className="flex flex-col items-center justify-center p-6 gap-3">
-                                    <div className="relative w-16 h-16 group-hover:scale-110 transition-transform duration-300">
-                                        <div className="absolute inset-0 bg-primary/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                        <div className="relative w-12 h-12 mx-auto">
+                    <CarouselItem key={index} className="pl-4 basis-[70%] sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
+                        <div className="p-2 h-full">
+                            <Card className="glass-card group hover:-translate-y-2 rounded-3xl overflow-hidden h-full">
+                                <CardContent className="flex flex-col items-center justify-center p-8 gap-4 h-full">
+                                    <div className="relative w-20 h-20 group-hover:scale-110 transition-transform duration-500">
+                                        <div className="absolute inset-0 bg-primary/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                        <div className="relative w-14 h-14 mx-auto">
                                             <Image
                                                 src={skill.icon}
                                                 alt={skill.name}
                                                 fill
-                                                className="object-contain"
+                                                className="object-contain filter drop-shadow-sm"
                                             />
                                         </div>
                                     </div>
-                                    <div className="text-center space-y-1">
-                                        <span className="font-semibold text-sm group-hover:text-primary transition-colors block">
+                                    <div className="text-center space-y-2">
+                                        <span className="font-black text-base group-hover:text-primary transition-colors block tracking-tight">
                                             {skill.name}
                                         </span>
                                         {skill.category && (
-                                            <span className="block text-[10px] text-muted-foreground uppercase tracking-wider">
+                                            <span className="inline-block px-2 py-0.5 rounded-full bg-primary/5 text-[10px] text-primary/70 font-bold uppercase tracking-widest">
                                                 {skill.category}
                                             </span>
                                         )}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
-import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, Code2, Database, Server, Terminal, Filter, X } from "lucide-react"
+import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, Code2, Database, Server, Terminal, Filter, X, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -15,6 +15,7 @@ import { ProjectCarousel } from "@/components/project-carousel"
 import { MobileNav } from "@/components/mobile-nav"
 import LogoLoop from "@/components/logo-loop"
 import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiPostgresql, SiSupabase, SiN8N, SiJavascript, SiHtml5, SiCss3, SiGit, SiMysql } from 'react-icons/si';
+import { toast, Toaster } from "sonner"
 
 const techLogos = [
   { node: <SiReact />, title: "React", href: "https://react.dev" },
@@ -68,70 +69,70 @@ const projects = [
     title: "Módulo de Solicitação de Compras",
     description: "Sistema de criação de SCs com motor de validação inteligente que previne erros de classificação contábil. Interface master-detail para múltiplos itens, validação cruzada entre tipos de material/centros de custo/naturezas, e integração bidirecional com TOTVS Protheus (SC1).",
     images: ["/images/purchase1.png", "/images/purchase2.png"],
-    tags: ["Next.js", "TOTVS Protheus", "Zod", "React Hook Form", "Validation Engine", "ERP"],
+    tags: ["Next.js", "TOTVS Protheus", "ERP Integration", "TypeScript"],
     github: "#",
   },
   {
     title: "Módulo de Transferência de Estoque",
     description: "Sistema full-stack para orquestrar movimentações internas de estoque com integração TOTVS Protheus. Validações em tempo real de saldos (SB2), controle de rastro/endereçamento (bins), formulários condicionais e execução de rotinas automáticas (ExecAuto) para efetivação no ERP.",
     images: ["/images/transfer1.png", "/images/transfer2.png"],
-    tags: ["Next.js", "TOTVS Protheus", "Server Actions", "Zod", "React Hook Form", "ERP"],
+    tags: ["Next.js", "TOTVS Protheus", "ERP Integration", "TypeScript"],
     github: "#",
   },
   {
     title: "Controle de Produção Industrial (Shop Floor)",
     description: "Sistema web para apontamento de produção em chão de fábrica com integração ERP TOTVS Protheus. Controle de OPs, perdas, setup de máquinas e impressão térmica de etiquetas ZPL. Interface otimizada para tablets industriais com validações robustas e sincronização em tempo real.",
     images: ["/images/shopfloor1.png", "/images/shopfloor2.png", "/images/shopfloor3.png", "/images/shopfloor4.png", "/images/shopfloor5.png", "/images/shopfloor6.png"],
-    tags: ["Next.js", "TOTVS API", "React 19", "TypeScript", "ZPL Print", "ERP Integration"],
+    tags: ["Next.js", "TOTVS Protheus", "ERP Integration", "TypeScript"],
     github: "#",
   },
   {
     title: "Sistema de Gestão de Projetos (PMS)",
     description: "Plataforma avançada de gerenciamento com 3 visualizações interativas (Kanban drag-and-drop, Gantt customizado e Lista editável). Colaboração em tempo real via Socket.io, hierarquia infinita de sub-projetos e controle granular de permissões ACL.",
     images: ["/images/pms1.png", "/images/pms2.png", "/images/pms3.png", "/images/pms4.png"],
-    tags: ["Next.js 14", "Socket.io", "dnd-kit", "TypeScript", "Custom Gantt", "Real-time"],
+    tags: ["Next.js", "TypeScript", "Real-time"],
     github: "#",
   },
   {
     title: "Sistema de Gestão de Frota",
     description: "Plataforma completa para gerenciamento de solicitações de veículos com fluxo de aprovação multinível, check-in/out, upload de comprovantes e exportação de relatórios. Interface responsiva com tabelas no desktop e cards otimizados para mobile.",
     images: ["/images/frota1.png", "/images/frota2.png"],
-    tags: ["Next.js 14", "TypeScript", "Server Actions", "Shadcn UI", "Zod", "React Hook Form"],
+    tags: ["Next.js", "TypeScript", "ERP Integration"],
     github: "#",
   },
   {
     title: "Gerador de SVG Interativo",
     description: "Aplicativo desktop que processa arquivos SVG e gera versões interativas e dinâmicas para web, facilitando visualização de dados gráficos.",
     images: ["/images/svg1.png", "/images/svg2.png"],
-    tags: ["Python", "HTML5", "JavaScript", "CSS3"],
+    tags: ["Python", "JavaScript"],
     github: "#",
   },
   {
     title: "Gerenciador PM2 via Web",
     description: "Interface web para monitorar, subir, parar e reiniciar processos Node.js com PM2. Backend em Python e frontend moderno sem uso de terminal.",
     images: ["/images/pm21.png", "/images/pm22.png", "/images/pm23.png", "/images/pm24.png", "/images/pm25.png"],
-    tags: ["Python", "PM2", "REST API", "Dashboard"],
+    tags: ["Python", "Dashboard"],
     github: "#",
   },
   {
     title: "Auth & API Supabase",
     description: "Sistema completo de autenticação, gestão de perfis e validação. APIs desenvolvidas em Supabase e consumidas por frontend próprio.",
     images: ["/images/supa1.png", "/images/supa2.png"],
-    tags: ["Supabase", "PostgreSQL", "Auth", "RLS"],
+    tags: ["Supabase", "PostgreSQL", "Auth"],
     github: "#",
   },
   {
     title: "Consulta Chassi (Zoho CRM)",
     description: "Sistema de consulta integrada ao Zoho CRM via API Deluge, retornando informações de chassi em tempo real.",
     images: [],
-    tags: ["Zoho CRM", "Python", "Deluge", "Integration"],
+    tags: ["Python", "ERP Integration"],
     github: "#",
   },
   {
     title: "Migração SQL Server → PostgreSQL",
     description: "Automação ETL com n8n para migração massiva de dados (Produtos, Clientes, Financeiro) entre bancos diferentes.",
     images: [],
-    tags: ["n8n", "SQL Server", "PostgreSQL", "ETL"],
+    tags: ["PostgreSQL", "Automation"],
     github: "#",
   },
 ]
@@ -156,99 +157,29 @@ function StarRating({ level }: { level: number }) {
   )
 }
 
-function ProjectCard({ project, index }: { project: typeof projects[0]; index: number }) {
-  const [currentImage, setCurrentImage] = useState(0)
-
-  useEffect(() => {
-    if (project.images.length <= 1) return
-    const timer = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % project.images.length)
-    }, 3000)
-    return () => clearInterval(timer)
-  }, [project.images.length])
-
-  return (
-    <Card className="group flex flex-col h-full overflow-hidden bg-card border-border/40 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1">
-      <div className="relative aspect-video overflow-hidden bg-muted">
-        {project.images.map((img, imgIndex) => (
-          <Image
-            key={imgIndex}
-            src={img || "/placeholder.svg"}
-            alt={`${project.title} - ${imgIndex + 1}`}
-            fill
-            className={`object-cover transition-all duration-700 ${imgIndex === currentImage ? "opacity-100 scale-100" : "opacity-0 scale-105"}`}
-          />
-        ))}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60" />
-
-        {/* Carousel Indicators */}
-        {project.images.length > 1 && (
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10">
-            {project.images.map((_, imgIndex) => (
-              <button
-                key={imgIndex}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentImage(imgIndex);
-                }}
-                className={`h-1.5 rounded-full transition-all duration-300 shadow-sm ${imgIndex === currentImage
-                  ? "w-6 bg-white"
-                  : "w-1.5 bg-white/40 hover:bg-white/60"
-                  }`}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
-      <CardContent className="p-5 flex flex-col flex-grow">
-        <div className="mb-4">
-          <h3 className="font-bold text-xl mb-2 tracking-tight group-hover:text-primary transition-colors">
-            {project.title}
-          </h3>
-          <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-            {project.description}
-          </p>
-        </div>
-
-        <div className="mt-auto space-y-4">
-          <div className="flex flex-wrap gap-2">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-secondary text-secondary-foreground transition-colors hover:bg-secondary/80"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          <div className="pt-4 border-t border-border/50 flex items-center justify-between">
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors group/link"
-            >
-              <Github className="h-4 w-4" />
-              <span>Ver código</span>
-              <ExternalLink className="h-3 w-3 opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300" />
-            </a>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
+// Local ProjectCard removed as it's replaced by @/components/project-card.tsx
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("sobre")
   const [scrolled, setScrolled] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null)
+  const [isCopied, setIsCopied] = useState(false)
 
   const typingWords = ["Backend", "Automação", "APIs REST", "Integrações"]
   const typedText = useTypingEffect(typingWords, 150, 100, 2000)
+
+  const copyEmail = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const email = "seu-email@exemplo.com"
+    navigator.clipboard.writeText(email)
+    setIsCopied(true)
+    toast.success("E-mail copiado!", {
+      description: email,
+      icon: <Check className="h-4 w-4 text-primary" />,
+    })
+    setTimeout(() => setIsCopied(false), 2000)
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -288,77 +219,86 @@ export default function Portfolio() {
   }
 
 
+  // Main stacks that people look for in a dev
+  const mainStacks = ["Next.js", "TypeScript", "Python", "TOTVS Protheus", "ERP Integration", "PostgreSQL", "Supabase"]
+
   // Filter projects by selected tag
   const filteredProjects = selectedFilter
     ? projects.filter(project => project.tags.includes(selectedFilter))
     : projects
 
-  // Get all unique tags from projects
-  const allTags = Array.from(new Set(projects.flatMap(p => p.tags)))
+  // Use main stacks for the filter options
+  const allTags = mainStacks
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      <Toaster position="top-center" richColors />
       <ScrollProgress />
+      <div className="noise-bg opacity-[0.08]" />
 
       {/* Gradient cursor follower - only on desktop */}
       <div
         className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300 hidden lg:block"
         style={{
-          background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(56, 189, 248, 0.06), transparent 40%)`
+          background: `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(56, 189, 248, 0.08), transparent 45%)`
         }}
       />
 
       {/* Background - Dot Pattern with Vignette */}
-      <div className="fixed inset-0 z-0 h-full w-full bg-background">
-        <div className="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+      <div className="fixed inset-0 z-0 h-full w-full bg-background overflow-hidden">
+        {/* Animated Blobs */}
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-primary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-blue-400/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-cyan-400/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000" />
+
+        <div className="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] opacity-40" />
       </div>
 
       {/* Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-        ? "py-3 bg-background/70 backdrop-blur-md border-b border-border/40 shadow-[0_2px_20px_-10px_rgba(0,0,0,0.1)]"
-        : "py-5 bg-transparent"
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
+        ? "py-3 bg-background/60 backdrop-blur-xl border-b border-border/40 shadow-lg"
+        : "py-6 bg-transparent"
         }`}>
-        <div className="container mx-auto px-4 lg:px-8">
+        <div className="container mx-auto px-4 lg:px-12">
           <div className="flex items-center justify-between">
             <button
               onClick={() => scrollToSection("sobre")}
               className="flex items-center gap-4 group"
             >
-              <div className="relative h-11 w-11 overflow-hidden rounded-2xl shadow-lg ring-1 ring-border/50 group-hover:ring-primary/50 transition-all duration-500 bg-card group-hover:shadow-primary/20">
+              <div className="relative h-12 w-12 overflow-hidden rounded-2xl shadow-xl ring-1 ring-border/50 group-hover:ring-primary/50 transition-all duration-500 bg-card/80 backdrop-blur-sm group-hover:shadow-primary/20 group-hover:-translate-y-1">
                 <Image
                   src="/logo.png"
                   alt="Logo Jean Correa"
                   fill
-                  className="object-cover scale-110 group-hover:scale-125 transition-transform duration-500"
+                  className="object-cover scale-110 group-hover:scale-125 transition-transform duration-700"
                 />
               </div>
               <div className="flex flex-col items-start -space-y-0.5">
-                <span className="text-lg font-extrabold tracking-tight text-foreground group-hover:text-primary transition-colors">Jean Correa</span>
-                <span className="text-[10px] text-muted-foreground font-semibold tracking-[0.3em] uppercase opacity-70">Portfolio</span>
+                <span className="text-xl font-black tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">Jean Correa</span>
+                <span className="text-[10px] text-primary/60 font-bold tracking-[0.4em] uppercase">Developer</span>
               </div>
             </button>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1 p-1 rounded-full bg-muted/20 backdrop-blur-sm border border-border/30">
+            <nav className="hidden md:flex items-center gap-1 p-1 rounded-full bg-muted/20 backdrop-blur-md border border-white/5">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`relative px-5 py-2 text-sm font-medium transition-all duration-300 rounded-full ${activeSection === item.id
-                    ? "text-primary bg-primary/10 shadow-sm"
+                  className={`relative px-6 py-2.5 text-sm font-semibold transition-all duration-300 rounded-full ${activeSection === item.id
+                    ? "text-primary bg-primary/10"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                     }`}
                 >
                   {item.label}
                   {activeSection === item.id && (
                     <span
-                      className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-primary rounded-full"
-                      style={{ transform: 'translateY(-2px)' }}
+                      className="absolute inset-0 bg-primary/5 rounded-full ring-1 ring-inset ring-primary/20"
                     />
                   )}
                 </button>
               ))}
-              <div className="w-px h-4 bg-border/50 mx-2" />
+              <div className="w-px h-5 bg-border/50 mx-2" />
               <ThemeToggle />
             </nav>
 
@@ -372,121 +312,113 @@ export default function Portfolio() {
 
       <main className="relative z-10">
         {/* Hero Section */}
-        <section id="sobre" className="min-h-screen flex items-center pt-24 pb-12 lg:pt-20">
-          <div className="container mx-auto px-4 lg:px-8 py-0 lg:py-0">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+        <section id="sobre" className="min-h-[100svh] flex items-center pt-24 pb-12 lg:pt-0">
+          <div className="container mx-auto px-4 lg:px-12">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               {/* Left Column - Text */}
-              <div className="order-2 lg:order-1">
-                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 mb-4">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
-                  </span>
-                  <span className="text-[11px] font-medium text-primary">Disponível para projetos</span>
-                </div>
-
-                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-                  Desenvolvedor{" "}
-                  <span className="text-primary inline-block min-w-[200px]">
+              <div className="order-2 lg:order-1 text-center lg:text-left">
+                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-8 leading-[1.1] tracking-tight">
+                  Desenvolvedor{" "}<br className="hidden sm:block" />
+                  <span className="text-gradient inline-block min-w-[200px]">
                     {typedText}
                     <span className="animate-pulse">|</span>
                   </span>
                 </h1>
 
-                <p className="text-base lg:text-xl text-muted-foreground mb-6 leading-relaxed max-w-lg">
-                  Graduando em <span className="text-foreground font-medium">Engenharia de Software</span> com foco em Backend, Automação e Integrações.
-                  Especialista em <span className="text-foreground font-medium">Supabase</span>, <span className="text-foreground font-medium">PostgreSQL</span>, <span className="text-foreground font-medium">APIs REST</span> e <span className="text-foreground font-medium">PM2</span>.
+                <p className="text-lg lg:text-2xl text-muted-foreground/80 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                  Graduando em <span className="text-foreground font-bold underline decoration-primary/30 underline-offset-4">Engenharia de Software</span>. Transformo desafios técnicos em soluções robustas de <span className="text-foreground font-bold">Backend e Automação</span>.
                 </p>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
                   {stats.map((stat, index) => (
-                    <div key={index} className="text-center p-2.5 rounded-lg bg-card/50 border border-border/50">
-                      <div className="text-xl sm:text-2xl font-bold text-primary">{stat.value}</div>
-                      <div className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider leading-tight">{stat.label}</div>
+                    <div key={index} className="flex flex-col p-4 rounded-2xl bg-card/40 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 group">
+                      <div className="text-2xl lg:text-3xl font-black text-primary group-hover:scale-110 transition-transform">{stat.value}</div>
+                      <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{stat.label}</div>
                     </div>
                   ))}
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                  <Button size="lg" onClick={() => scrollToSection("projetos")} className="group w-full sm:w-auto h-12 text-base shadow-lg shadow-primary/20 active-scale">
-                    Ver Projetos
-                    <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <Button size="lg" onClick={() => scrollToSection("projetos")} className="group h-14 px-8 text-base font-bold shadow-xl shadow-primary/20 active-scale rounded-2xl">
+                    Explorar Trabalho
+                    <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
-                  <Button size="lg" variant="outline" onClick={() => scrollToSection("contato")} className="bg-background/50 backdrop-blur w-full sm:w-auto h-12 text-base active-scale">
-                    <Mail className="mr-2 h-4 w-4" />
-                    Contato
+                  <Button size="lg" variant="outline" onClick={() => scrollToSection("contato")} className="glass h-14 px-8 text-base font-bold active-scale rounded-2xl">
+                    <Mail className="mr-2 h-5 w-5" />
+                    Vamos Conversar
                   </Button>
                 </div>
               </div>
 
               {/* Right Column - Visual */}
-              <div className="order-1 lg:order-2 flex justify-center">
-                <div className="relative">
-                  {/* Decorative elements */}
-                  <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-primary/5 to-transparent rounded-3xl blur-2xl" />
+              <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+                <div className="relative animate-in fade-in zoom-in duration-1000">
+                  {/* Subtle Background Glow */}
+                  <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full opacity-50" />
 
-                  {/* About Card */}
-                  <Card className="relative bg-card/80 backdrop-blur border-border/50 max-w-sm">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0">
-                          <Code2 className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-base sm:text-lg">Jean Correa</h3>
-                          <p className="text-xs sm:text-sm text-muted-foreground">Backend Developer</p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div className="flex items-start gap-3">
-                          <div className="p-2 rounded-lg bg-primary/10 shrink-0">
-                            <Database className="h-4 w-4 text-primary" />
+                  {/* About Card Wrapper */}
+                  <div className="relative">
+                    <Card className="glass-card p-8 rounded-[2rem] border border-white/10 max-w-sm sm:max-w-md w-full shadow-2xl backdrop-blur-md bg-white/[0.02]">
+                      <div className="space-y-6 text-left relative z-10">
+                        <div className="flex items-center gap-6">
+                          <div className="relative">
+                            <div className="h-20 w-20 rounded-full bg-primary/20 p-[2px]">
+                              <div className="h-full w-full rounded-full bg-background overflow-hidden relative">
+                                <Image
+                                  src="/logo.png"
+                                  alt="Jean Correa Logo"
+                                  fill
+                                  className="object-cover"
+                                  priority
+                                />
+                              </div>
+                            </div>
+                            <div className="absolute bottom-1 right-1 h-4 w-4 rounded-full bg-green-500 border-2 border-background shadow-lg" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium">Banco de Dados</p>
-                            <p className="text-xs text-muted-foreground">PostgreSQL, Supabase, SQL</p>
+                            <h2 className="text-2xl font-black tracking-tight mb-1 text-foreground">Jean Correa</h2>
                           </div>
                         </div>
 
-                        <div className="flex items-start gap-3">
-                          <div className="p-2 rounded-lg bg-primary/10 shrink-0">
-                            <Server className="h-4 w-4 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium">Backend</p>
-                            <p className="text-xs text-muted-foreground">Node.js, Python, REST APIs</p>
+                        <div className="space-y-5">
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            Especialista em construir <span className="text-foreground font-bold">experiências digitais resilientes</span> e arquiteturas backend modernas integradas ao <span className="text-primary/90 font-bold">ERP Protheus</span>.
+                          </p>
+                          <div className="flex gap-3">
+                            <Button
+                              variant="outline"
+                              className="rounded-xl font-bold bg-white/5 hover:bg-white/10 border-white/10 flex-1 h-11 text-xs transition-all"
+                              onClick={copyEmail}
+                            >
+                              {isCopied ? <Check className="mr-2 h-4 w-4 text-green-400" /> : <Copy className="mr-2 h-4 w-4" />}
+                              {isCopied ? "Copiado!" : "E-mail"}
+                            </Button>
+                            <Button className="rounded-xl font-bold flex-1 h-11 text-xs bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
+                              Hire Me
+                            </Button>
                           </div>
                         </div>
 
-                        <div className="flex items-start gap-3">
-                          <div className="p-2 rounded-lg bg-primary/10 shrink-0">
-                            <Terminal className="h-4 w-4 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium">DevOps</p>
-                            <p className="text-xs text-muted-foreground">PM2, Linux, Git</p>
-                          </div>
+                        <div className="flex gap-3 pt-2">
+                          {[
+                            { icon: Github, href: "https://github.com/jeanvst" },
+                            { icon: Linkedin, href: "https://linkedin.com/in/jean-victor-dev" }
+                          ].map((social, i) => (
+                            <a
+                              key={i}
+                              href={social.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground hover:text-primary transition-all duration-300"
+                            >
+                              <social.icon className="h-4 w-4" />
+                            </a>
+                          ))}
                         </div>
                       </div>
-
-                      <div className="mt-6 pt-6 border-t border-border/50">
-                        <p className="text-xs text-muted-foreground mb-3">Graduando em Engenharia de Software</p>
-                        <div className="flex gap-2">
-                          <a href="https://github.com/seu-usuario" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors">
-                            <Github className="h-4 w-4" />
-                          </a>
-                          <a href="https://linkedin.com/in/seu-perfil" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors">
-                            <Linkedin className="h-4 w-4" />
-                          </a>
-                          <a href="mailto:seu-email@exemplo.com" className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors">
-                            <Mail className="h-4 w-4" />
-                          </a>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                    </Card>
+                  </div>
                 </div>
               </div>
             </div>
@@ -494,7 +426,7 @@ export default function Portfolio() {
         </section>
 
         {/* Projects Section */}
-        <section id="projetos" className="py-12 md:py-24 lg:py-32 scroll-mt-20">
+        < section id="projetos" className="py-12 md:py-24 lg:py-32 scroll-mt-20" >
           <div className="container mx-auto px-4 lg:px-8">
             <AnimatedSection animation="fade-up">
               <div className="max-w-2xl mb-8">
@@ -628,18 +560,22 @@ export default function Portfolio() {
               </div>
             </AnimatedSection>
 
-            <div className="flex overflow-x-auto snap-x-mandatory gap-4 -mx-4 px-4 pb-4 md:pb-0 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4 scrollbar-hide md:overflow-visible">
+            <div className="flex overflow-x-auto snap-x-mandatory gap-6 -mx-4 px-4 pb-6 md:pb-0 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 scrollbar-hide md:overflow-visible">
               {certificates.map((cert, index) => (
-                <div key={index} className="flex-none w-[70vw] md:w-auto snap-center">
+                <div key={index} className="flex-none w-[80vw] md:w-auto snap-center">
                   <AnimatedSection animation="fade-up" delay={index * 100} className="h-full">
-                    <Card className="group bg-card/50 backdrop-blur border-border/50 hover:border-primary/30 transition-all duration-300 h-full">
-                      <CardContent className="p-5 flex flex-col h-full">
-                        <div className="p-2.5 rounded-xl bg-primary/10 w-fit mb-4 group-hover:bg-primary/20 transition-colors shrink-0">
-                          <Award className="h-5 w-5 text-primary" />
+                    <Card className="glass-card group hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full">
+                      <CardContent className="p-8 flex flex-col h-full gap-4">
+                        <div className="p-4 rounded-2xl bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors shadow-inner">
+                          <Award className="h-6 w-6 text-primary" />
                         </div>
-                        <h3 className="font-semibold text-sm mb-1 line-clamp-2 group-hover:text-primary transition-colors">{cert.title}</h3>
-                        <p className="text-xs text-muted-foreground mb-4 flex-grow">{cert.institution}</p>
-                        <span className="text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full w-fit self-start">{cert.date}</span>
+                        <div>
+                          <h3 className="font-black text-lg tracking-tight group-hover:text-primary transition-colors leading-tight mb-2">{cert.title}</h3>
+                          <p className="text-sm text-muted-foreground/80 font-medium mb-4">{cert.institution}</p>
+                        </div>
+                        <div className="mt-auto">
+                          <span className="text-[10px] font-black tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full">{cert.date}</span>
+                        </div>
                       </CardContent>
                     </Card>
                   </AnimatedSection>
@@ -661,35 +597,40 @@ export default function Portfolio() {
                 </p>
 
                 <AnimatedSection animation="scale" delay={200}>
-                  <Card className="bg-card/50 backdrop-blur border-border/50 max-w-md mx-auto">
-                    <CardContent className="p-6">
+                  <Card className="glass-card max-w-lg mx-auto rounded-[2.5rem] overflow-hidden">
+                    <CardContent className="p-8 sm:p-12">
                       <a
-                        href="mailto:seu-email@exemplo.com"
-                        className="block p-4 rounded-xl bg-primary/10 hover:bg-primary/20 transition-colors mb-4 group"
+                        href="#"
+                        onClick={copyEmail}
+                        className="flex flex-col items-center p-8 rounded-3xl bg-primary/5 hover:bg-primary/10 border border-primary/10 transition-all duration-300 mb-6 group active:scale-95 shadow-inner relative overflow-hidden"
                       >
-                        <Mail className="h-6 w-6 text-primary mx-auto mb-2" />
-                        <p className="font-medium group-hover:text-primary transition-colors">seu-email@exemplo.com</p>
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
+                          {isCopied ? <Check className="h-8 w-8 text-primary animate-in zoom-in" /> : <Mail className="h-8 w-8 text-primary" />}
+                        </div>
+                        <p className="text-lg font-black group-hover:text-primary transition-colors tracking-tight relative z-10">seu-email@exemplo.com</p>
+                        <div className="flex items-center gap-2 mt-2 relative z-10">
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{isCopied ? "Copiado!" : "Clique para copiar"}</p>
+                          {!isCopied && <Copy className="h-3 w-3 text-muted-foreground" />}
+                        </div>
                       </a>
 
-                      <div className="flex gap-3">
-                        <a
-                          href="https://github.com/seu-usuario"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/50 hover:bg-primary/10 hover:text-primary transition-all"
-                        >
-                          <Github className="h-5 w-5" />
-                          <span className="text-sm font-medium">GitHub</span>
-                        </a>
-                        <a
-                          href="https://linkedin.com/in/seu-perfil"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/50 hover:bg-primary/10 hover:text-primary transition-all"
-                        >
-                          <Linkedin className="h-5 w-5" />
-                          <span className="text-sm font-medium">LinkedIn</span>
-                        </a>
+                      <div className="flex gap-4">
+                        {[
+                          { icon: Github, label: "GitHub", href: "https://github.com/seu-usuario" },
+                          { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/in/seu-perfil" }
+                        ].map((social, i) => (
+                          <a
+                            key={i}
+                            href={social.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 flex flex-col items-center gap-2 p-6 rounded-3xl bg-muted/40 hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all duration-300 group hover:shadow-xl active:scale-90"
+                          >
+                            <social.icon className="h-6 w-6 group-hover:text-primary transition-colors" />
+                            <span className="text-xs font-black uppercase tracking-widest">{social.label}</span>
+                          </a>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>

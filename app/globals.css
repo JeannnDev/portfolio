@@ -32,24 +32,24 @@
 }
 
 .dark {
-  --background: #0f172a;
+  --background: #0b0e14;
   --foreground: #e2e8f0;
-  --card: #1e293b;
+  --card: #151921;
   --card-foreground: #e2e8f0;
-  --popover: #1e293b;
+  --popover: #151921;
   --popover-foreground: #e2e8f0;
   --primary: #38bdf8;
   --primary-foreground: #0f172a;
   --secondary: #1e293b;
   --secondary-foreground: #e2e8f0;
-  --muted: #334155;
+  --muted: #1e293b;
   --muted-foreground: #94a3b8;
   --accent: #38bdf8;
   --accent-foreground: #0f172a;
   --destructive: #ef4444;
   --destructive-foreground: #fef2f2;
-  --border: #334155;
-  --input: #334155;
+  --border: #222936;
+  --input: #222936;
   --ring: #38bdf8;
   --chart-1: #38bdf8;
   --chart-2: #22d3ee;
@@ -85,10 +85,204 @@
   .snap-start {
     scroll-snap-align: start;
   }
+
+  .glass {
+    @apply bg-background/60 backdrop-blur-xl border border-white/10 dark:border-white/5;
+  }
+
+  .glass-card {
+    @apply bg-card/40 backdrop-blur-md border border-white/10 dark:border-white/5 shadow-xl transition-all duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/80 to-blue-400;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  .noise-bg {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    width: 200%;
+    height: 200%;
+    background: transparent url('http://assets.iceable.com/img/noise-transparent.png') repeat 0 0;
+    background-repeat: repeat;
+    animation: grain 8s steps(10) infinite;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @keyframes grain {
+
+    0%,
+    100% {
+      transform: translate(0, 0)
+    }
+
+    10% {
+      transform: translate(-5%, -10%)
+    }
+
+    20% {
+      transform: translate(-15%, 5%)
+    }
+
+    30% {
+      transform: translate(7%, -25%)
+    }
+
+    40% {
+      transform: translate(-5%, 25%)
+    }
+
+    50% {
+      transform: translate(-15%, 10%)
+    }
+
+    60% {
+      transform: translate(15%, 0)
+    }
+
+    70% {
+      transform: translate(0, 15%)
+    }
+
+    80% {
+      transform: translate(3%, 35%)
+    }
+
+    90% {
+      transform: translate(-10%, 10%)
+    }
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .rotate-y-2 {
+    transform: rotateY(2deg);
+  }
+
+  .-rotate-y-2 {
+    transform: rotateY(-2deg);
+  }
+
+  .moving-border {
+    position: relative;
+    border: 1px solid transparent;
+  }
+
+  .moving-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    background: conic-gradient(from 0deg, transparent, var(--primary), transparent 40%);
+    animation: rotate-border 10s linear infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  @keyframes rotate-border {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+  border: 3px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
 }
 
 @theme inline {
-  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);

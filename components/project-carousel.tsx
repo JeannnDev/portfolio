@@ -29,10 +29,10 @@ export function ProjectCarousel({ filteredProjects }: ProjectCarouselProps) {
                 }}
                 className="w-full"
             >
-                <CarouselContent className="-ml-4 pb-4">
+                <CarouselContent className="-ml-6 pb-12">
                     {filteredProjects.map((project, index) => (
-                        <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3 h-full">
-                            <div className="h-full py-2">
+                        <CarouselItem key={index} className="pl-6 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 h-full">
+                            <div className="h-full py-4">
                                 <ProjectCard project={project} index={index} />
                             </div>
                         </CarouselItem>

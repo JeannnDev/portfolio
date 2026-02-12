@@ -2,6 +2,7 @@ import React from "react"
 import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
+import { LoadingScreen } from '@/components/loading-screen'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -54,6 +55,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange={false}
         >
+          <LoadingScreen />
           {children}
           <Analytics />
         </ThemeProvider>
