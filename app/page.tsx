@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
-import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, ChevronUp, Code2, Database, Server, Terminal, Filter, X, Copy, Check, GraduationCap, FileText } from "lucide-react"
+import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, ChevronUp, Code2, Database, Server, Terminal, Filter, X, Copy, Check, GraduationCap, FileText, Calendar, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -45,6 +45,160 @@ const techLogos = [
   { node: <SiCloudflare />, title: "Cloudflare", href: "https://www.cloudflare.com" },
 ];
 
+// Sub-component for Course Modal to manage internal state
+function CourseModalContent({ cert }: { cert: any }) {
+  const [activeCourse, setActiveCourse] = useState(0)
+  const tabsListRef = useRef<HTMLDivElement>(null)
+
+  // Scroll active tab into view on mobile
+  useEffect(() => {
+    const activeTab = tabsListRef.current?.querySelector(`[data-state="active"]`)
+    if (activeTab) {
+      activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+    }
+  }, [activeCourse])
+
+  const nextCourse = () => {
+    if (cert.courses && activeCourse < cert.courses.length - 1) {
+      setActiveCourse(activeCourse + 1)
+    }
+  }
+
+  const prevCourse = () => {
+    if (activeCourse > 0) {
+      setActiveCourse(activeCourse - 1)
+    }
+  }
+
+  return (
+    <Tabs
+      value={`course-${activeCourse}`}
+      onValueChange={(v) => setActiveCourse(parseInt(v.split('-')[1]))}
+      className="flex-1 flex flex-col sm:flex-row overflow-hidden"
+    >
+      {/* Sidebar / Navigation */}
+      <div className="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-white/5 flex flex-col bg-card/40 backdrop-blur-3xl shrink-0">
+        <div className="p-5 sm:p-6 pb-2">
+          <div className="flex items-center gap-3 mb-4 sm:mb-6">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-primary/10">
+              <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+            </div>
+            <div className="flex flex-col">
+              <DialogTitle className="text-base sm:text-lg font-black tracking-tight leading-tight">{cert.title}</DialogTitle>
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-black">{cert.courses?.length} Conquistas</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden flex-1 flex flex-col px-4 pb-4 sm:pb-6">
+          <div className="flex-1 overflow-x-auto sm:overflow-y-auto scrollbar-hide sm:scrollbar-thin" ref={tabsListRef} style={{ scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
+            <TabsList className="flex flex-row sm:flex-col bg-transparent w-max sm:w-full h-auto p-0 gap-2 sm:gap-1 justify-start">
+              {cert.courses?.map((course: any, i: number) => (
+                <TabsTrigger
+                  key={i}
+                  value={`course-${i}`}
+                  className="flex-shrink-0 sm:flex-shrink sm:w-full justify-start text-left rounded-xl px-4 py-2.5 sm:py-3 text-[11px] sm:text-xs font-bold transition-all data-[state=active]:bg-primary/10 data-[state=active]:text-primary group/tab border border-border/10 data-[state=active]:border-primary/30 shadow-sm"
+                >
+                  <div className="flex items-center gap-2.5 sm:gap-3 max-w-[180px] sm:max-w-none">
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary/30 group-data-[state=active]/tab:bg-primary transition-all shrink-0" />
+                    <span className="truncate">{course.name}</span>
+                  </div>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden bg-background/40 relative">
+        {cert.courses?.map((course: any, i: number) => (
+          <TabsContent key={i} value={`course-${i}`} className="flex-1 flex flex-col overflow-hidden m-0 p-4 sm:p-10 outline-none">
+            <div className="flex-1 w-full h-full flex items-center justify-center min-h-0 relative group/view">
+              <a
+                href={course.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full h-full relative group/screenshot flex border border-white/10 rounded-2xl sm:rounded-[2.5rem] overflow-hidden bg-black/60 shadow-2xl transition-all duration-700 hover:shadow-primary/20 hover:scale-[1.002]"
+              >
+                <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 bg-gradient-to-br from-[#051933] to-black z-0">
+                  <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                </div>
+
+                <img
+                  src={`https://s0.wp.com/mshots/v1/${encodeURIComponent(course.url)}?w=1280`}
+                  alt={`Certificado: ${course.name}`}
+                  className="w-full h-full object-contain relative z-10 opacity-0 transition-opacity duration-1000"
+                  onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
+                />
+
+                <div className="absolute inset-0 border border-white/5 pointer-events-none z-20 rounded-2xl sm:rounded-[2.5rem]"></div>
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/screenshot:opacity-100 transition-opacity duration-300 z-30 flex items-center justify-center">
+                  <div className="w-14 h-14 rounded-full bg-primary/90 flex items-center justify-center shadow-2xl text-primary-foreground transform scale-50 group-hover/screenshot:scale-100 transition-transform duration-500">
+                    <ExternalLink className="h-5 w-5" />
+                  </div>
+                </div>
+              </a>
+
+              {/* Navigation Arrows - Moved AFTER 'a' tag to ensure they are on top */}
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-2 sm:px-4 z-[50] pointer-events-none">
+                <button
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); prevCourse(); }}
+                  disabled={activeCourse === 0}
+                  className={`h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white transition-all pointer-events-auto ${activeCourse === 0 ? 'opacity-0 scale-90' : 'opacity-100 hover:bg-black/80 hover:scale-110 active:scale-95 shadow-[0_0_20px_rgba(0,0,0,0.4)]'}`}
+                >
+                  <ChevronRight className="rotate-180 h-6 w-6 sm:h-7 sm:w-7" />
+                </button>
+                <button
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); nextCourse(); }}
+                  disabled={activeCourse === cert.courses.length - 1}
+                  className={`h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white transition-all pointer-events-auto ${activeCourse === cert.courses.length - 1 ? 'opacity-0 scale-90' : 'opacity-100 hover:bg-black/80 hover:scale-110 active:scale-95 shadow-[0_0_20px_rgba(0,0,0,0.4)]'}`}
+                >
+                  <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
+                </button>
+              </div>
+            </div>
+          </TabsContent>
+        ))}
+      </div>
+    </Tabs>
+  )
+}
+
+const formatExpDate = (date: Date) => {
+  return date.toLocaleString('pt-BR', { month: 'short', year: 'numeric' }).replace('.', '')
+}
+
+const getDuration = (start: Date, end: Date | null) => {
+  const endDate = end || new Date()
+  let months = (endDate.getFullYear() - start.getFullYear()) * 12 + (endDate.getMonth() - start.getMonth())
+
+  // Inclusive calculation: add 1 month to include the start month (standard professional/LinkedIn pattern)
+  months = months + 1
+
+  const years = Math.floor(months / 12)
+  const remainingMonths = months % 12
+
+  const parts = []
+  if (years > 0) parts.push(`${years} ${years === 1 ? 'ano' : 'anos'}`)
+  if (remainingMonths > 0) parts.push(`${remainingMonths} ${remainingMonths === 1 ? 'mês' : 'meses'}`)
+
+  return parts.join(' e ')
+}
+
+const getTotalExperience = (roles: any[]) => {
+  if (!roles.length) return ""
+
+  // Find earliest start and latest end
+  const starts = roles.map(r => r.startDate.getTime())
+  const ends = roles.map(r => (r.endDate || new Date()).getTime())
+
+  const earliest = new Date(Math.min(...starts))
+  const latest = new Date(Math.max(...ends))
+
+  return getDuration(earliest, latest)
+}
+
 const navItems = [
   { id: "sobre", label: "Sobre" },
   { id: "projetos", label: "Projetos" },
@@ -58,13 +212,13 @@ const experiences = [
   {
     company: "GRUPO AIZ",
     companyLogo: "/aiz.png",
-    totalDuration: "2 a 6 m",
     location: "São José dos Pinhais, Paraná, Brasil · Presencial",
     roles: [
       {
         title: "Desenvolvedor Full Stack",
         type: "Tempo integral",
-        period: "jul de 2025 – o momento · 9 meses",
+        startDate: new Date(2025, 6), // Julho 2025
+        endDate: null,
         current: true,
         description: [
           "Desenvolvimento e manutenção de aplicações web utilizando React, TypeScript, Python e Node.js.",
@@ -79,7 +233,8 @@ const experiences = [
       {
         title: "Aprendiz",
         type: "Meio período",
-        period: "out de 2023 – jul de 2025 · 1 ano 10 meses",
+        startDate: new Date(2023, 9), // Outubro 2023
+        endDate: new Date(2025, 6), // Julho 2025
         current: false,
         description: [
           "Desenvolvimento Back‑End com Python e Node.js.",
@@ -275,10 +430,27 @@ export default function Portfolio() {
     setTimeout(() => setIsCopied(false), 2000)
   }
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   useEffect(() => {
     // Scroll state for header blur
     const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener("scroll", handleScroll)
+
+    // Detect if any modal is open (Radix UI adds style/attributes to body)
+    const modalObserver = new MutationObserver(() => {
+      const isLocked = document.body.style.pointerEvents === 'none' ||
+        document.body.hasAttribute('data-scroll-locked') ||
+        !!document.querySelector('[role="dialog"]')
+      setIsModalOpen(isLocked)
+    })
+
+    modalObserver.observe(document.body, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+      attributeFilter: ['style', 'data-scroll-locked']
+    })
 
     // IntersectionObserver for reliable active-section detection
     const observerOptions: IntersectionObserverInit = {
@@ -308,6 +480,7 @@ export default function Portfolio() {
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("mousemove", handleMouseMove)
       observer.disconnect()
+      modalObserver.disconnect()
     }
   }, [])
 
@@ -656,18 +829,21 @@ export default function Portfolio() {
               </div>
             </AnimatedSection>
 
-            <div className="flex flex-col gap-12 max-w-3xl">
+            <div className="flex flex-col gap-16 max-w-6xl">
               {experiences.map((exp, ei) => (
                 <AnimatedSection key={ei} animation="fade-up" delay={ei * 80}>
                   <div className="flex gap-5">
 
                     {/* LEFT — logo anchored to a vertical line */}
                     <div className="flex flex-col items-center shrink-0">
-                      <div className="w-[58px] h-[58px] rounded-2xl glass-card border border-white/10 shadow-lg overflow-hidden p-1.5 shrink-0 flex items-center justify-center">
-                        <Image src={exp.companyLogo} alt={exp.company} width={48} height={48} className="w-full h-full object-contain" />
+                      <div className="relative group/logo">
+                        <div className="absolute -inset-2 bg-primary/20 rounded-2xl blur-lg opacity-0 group-hover/logo:opacity-100 transition-opacity duration-500" />
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl glass-card border border-white/10 shadow-xl overflow-hidden p-2 shrink-0 flex items-center justify-center relative z-10">
+                          <Image src={exp.companyLogo} alt={exp.company} width={54} height={54} className="w-full h-full object-contain" />
+                        </div>
                       </div>
                       {/* Vertical line flowing down through all roles */}
-                      <div className="flex-1 w-px mt-3 bg-gradient-to-b from-primary/40 via-border/40 to-transparent" />
+                      <div className="flex-1 w-px mt-4 bg-gradient-to-b from-primary/60 via-primary/10 to-transparent" />
                     </div>
 
                     {/* RIGHT — company info + nested roles */}
@@ -677,7 +853,7 @@ export default function Portfolio() {
                       <div className="flex items-start justify-between gap-3 mb-7 pt-1.5">
                         <div>
                           <h3 className="text-base font-black text-foreground tracking-tight">{exp.company}</h3>
-                          <p className="text-[11px] text-muted-foreground/60 mt-0.5 font-medium">{exp.totalDuration}</p>
+                          <p className="text-[11px] text-muted-foreground/60 mt-0.5 font-medium">{getTotalExperience(exp.roles)}</p>
                           <p className="text-[11px] text-muted-foreground/40 mt-0.5">{exp.location}</p>
                         </div>
                       </div>
@@ -696,35 +872,82 @@ export default function Portfolio() {
                             </div>
 
                             {/* Role body */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 mb-3">
-                                <div>
-                                  <div className="flex items-center gap-2 flex-wrap">
-                                    <h4 className="text-[15px] font-black text-foreground">{role.title}</h4>
-                                    {role.current && (
-                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-primary/15 text-primary border border-primary/20">Atual</span>
-                                    )}
+                            <div className="flex-1 min-w-0 group/card relative">
+                              <div className="absolute -inset-4 bg-primary/5 rounded-[2.5rem] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 hidden md:block" />
+
+                              <div className="relative z-10 bg-card/40 md:bg-transparent md:border-none border border-white/5 rounded-3xl p-5 md:p-0">
+                                <div className="flex flex-col lg:grid lg:grid-cols-[1fr_300px] gap-8">
+                                  <div>
+                                    <div className="flex flex-col gap-1 mb-5">
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <h4 className="text-base sm:text-xl font-black text-foreground tracking-tight group-hover/card:text-primary transition-colors">{role.title}</h4>
+                                        {role.current && (
+                                          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black bg-primary/10 text-primary border border-primary/20 animate-pulse">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                            Ativo
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className="flex items-center gap-3 lg:hidden">
+                                        <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/60 font-medium">
+                                          <Clock className="h-3 w-3" />
+                                          {role.type}
+                                        </div>
+                                        <span className="text-muted-foreground/20">•</span>
+                                        <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/40">
+                                          <Calendar className="h-3 w-3" />
+                                          {formatExpDate(role.startDate)} – {role.endDate ? formatExpDate(role.endDate) : "o momento"}
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <ul className="space-y-4 mb-6">
+                                      {role.description.map((item, di) => (
+                                        <li key={di} className="flex gap-3 text-[13px] sm:text-sm text-muted-foreground/80 leading-relaxed font-medium">
+                                          <ChevronRight className="h-4 w-4 mt-0.5 text-primary/40 shrink-0 group-hover/card:text-primary/70 transition-colors" />
+                                          <span>{item}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
                                   </div>
-                                  <p className="text-xs text-muted-foreground/60 mt-0.5">{role.type}</p>
-                                  <p className="text-[11px] text-muted-foreground/40 mt-0.5">{role.period}</p>
+
+                                  <div className="space-y-6">
+                                    {/* Period & Type - Visible only on Desktop */}
+                                    <div className="hidden lg:block p-5 rounded-[2rem] bg-background/40 backdrop-blur-md border border-white/5 shadow-2xl group-hover/card:border-primary/20 transition-all">
+                                      <div className="space-y-4">
+                                        <div className="flex items-start gap-4">
+                                          <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                                            <Calendar className="h-4 w-4" />
+                                          </div>
+                                          <div className="flex flex-col gap-0.5">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">Período</span>
+                                            <p className="text-xs font-black text-foreground tracking-tight">
+                                              {formatExpDate(role.startDate)} – {role.endDate ? formatExpDate(role.endDate) : "o momento"} · {getDuration(role.startDate, role.endDate)}
+                                            </p>
+                                          </div>
+                                        </div>
+                                        <div className="h-px bg-white/5" />
+                                        <div className="flex items-start gap-4">
+                                          <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                                            <Clock className="h-4 w-4" />
+                                          </div>
+                                          <div className="flex flex-col gap-0.5">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">Tipo</span>
+                                            <p className="text-xs font-black text-foreground tracking-tight">{role.type}</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-2">
+                                      {role.skills.map((skill, si) => (
+                                        <span key={si} className="px-3 py-1.5 rounded-xl text-[10px] sm:text-[11px] font-black bg-primary/5 border border-primary/10 text-primary/70 hover:bg-primary/10 hover:text-primary transition-all duration-300">
+                                          {skill}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-
-                              <ul className="space-y-1.5 mb-4">
-                                {role.description.map((item, di) => (
-                                  <li key={di} className="flex gap-2.5 text-sm text-muted-foreground/75 leading-relaxed">
-                                    <span className="mt-2 w-1 h-1 rounded-full bg-primary/50 shrink-0" />
-                                    <span>{item}</span>
-                                  </li>
-                                ))}
-                              </ul>
-
-                              <div className="flex flex-wrap gap-1.5">
-                                {role.skills.map((skill, si) => (
-                                  <span key={si} className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-background/40 border border-border/50 text-muted-foreground/70 hover:border-primary/40 hover:text-foreground transition-all duration-200">
-                                    {skill}
-                                  </span>
-                                ))}
                               </div>
                             </div>
                           </div>
@@ -782,85 +1005,8 @@ export default function Portfolio() {
                             </Card>
                           </button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-[95vw] lg:max-w-[1100px] h-[95vh] sm:h-[85vh] rounded-[2.5rem] bg-card/95 backdrop-blur-2xl border-white/10 p-0 overflow-hidden shadow-2xl flex flex-col sm:flex-row">
-                          <Tabs defaultValue="course-0" className="flex-1 flex flex-col sm:flex-row overflow-hidden">
-                            {/* Sidebar / Navigation */}
-                            <div className="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-white/5 flex flex-col bg-card/40 backdrop-blur-3xl overflow-hidden">
-                              <div className="p-6 pb-2">
-                                <div className="flex items-center gap-3 mb-6">
-                                  <div className="p-2.5 rounded-xl bg-primary/10">
-                                    <GraduationCap className="h-5 w-5 text-primary" />
-                                  </div>
-                                  <div className="flex flex-col">
-                                    <DialogTitle className="text-lg font-black tracking-tight">{cert.title}</DialogTitle>
-                                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black">{cert.courses?.length} Conquistas</p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="flex-1 px-4 pb-6 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
-                                <TabsList className="flex flex-row sm:flex-col bg-transparent w-full h-auto p-0 gap-1 justify-start overflow-x-auto sm:overflow-visible scrollbar-hide">
-                                  {cert.courses?.map((course, i) => (
-                                    <TabsTrigger
-                                      key={i}
-                                      value={`course-${i}`}
-                                      className="flex-shrink-0 sm:flex-shrink sm:w-full justify-start text-left rounded-xl px-4 py-3 text-xs font-bold transition-all data-[state=active]:bg-primary/10 data-[state=active]:text-primary group/tab border border-transparent data-[state=active]:border-primary/20"
-                                    >
-                                      <div className="flex items-center gap-3 truncate w-full">
-                                        <div className="h-1.5 w-1.5 rounded-full bg-primary/40 group-data-[state=active]/tab:bg-primary transition-all shrink-0" />
-                                        <span className="truncate">{course.name}</span>
-                                      </div>
-                                    </TabsTrigger>
-                                  ))}
-                                </TabsList>
-                              </div>
-                            </div>
-
-                            {/* Main Content Area */}
-                            <div className="flex-1 flex flex-col overflow-hidden bg-background/40">
-                              {cert.courses?.map((course, i) => (
-                                <TabsContent key={i} value={`course-${i}`} className="flex-1 flex flex-col overflow-hidden m-0 p-6 sm:p-10 outline-none">
-                                  {/* Just the Certificate Image completely filling the space */}
-                                  <div className="flex-1 w-full h-full p-4 flex items-center justify-center">
-                                    <a
-                                      href={course.url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="w-full h-full relative group/screenshot flex min-h-[500px] border border-white/10 rounded-[2.5rem] overflow-hidden bg-black/40 shadow-2xl transition-all duration-700 hover:shadow-primary/20 hover:scale-[1.005]"
-                                    >
-                                      {/* Animated Background Loader */}
-                                      <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 bg-gradient-to-br from-[#051933]/50 to-black z-0">
-                                        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-                                      </div>
-
-                                      {/* The "Rendered Link as Image" - Dynamic Screenshot */}
-                                      <img
-                                        src={`https://s0.wp.com/mshots/v1/${encodeURIComponent(course.url)}?w=1280`}
-                                        alt={`Certificado: ${course.name}`}
-                                        className="w-full h-full object-cover object-center relative z-10 opacity-0 transition-opacity duration-1000"
-                                        onLoad={(e) => {
-                                          const target = e.target as HTMLImageElement;
-                                          target.style.opacity = '1';
-                                        }}
-                                        onError={(e) => {
-                                          const target = e.target as HTMLImageElement;
-                                          target.style.display = 'none';
-                                        }}
-                                      />
-
-                                      {/* Visual Border Overlay & Hover Icon */}
-                                      <div className="absolute inset-0 border border-white/5 pointer-events-none z-20 rounded-[2.5rem]"></div>
-                                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/screenshot:opacity-100 transition-opacity duration-300 z-30 flex items-center justify-center">
-                                        <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center shadow-2xl text-primary-foreground transform scale-50 group-hover/screenshot:scale-100 transition-transform duration-500">
-                                          <ExternalLink className="h-6 w-6" />
-                                        </div>
-                                      </div>
-                                    </a>
-                                  </div>
-                                </TabsContent>
-                              ))}
-                            </div>
-                          </Tabs>
+                        <DialogContent className="sm:max-w-[95vw] lg:max-w-[1100px] h-[95dvh] sm:h-[85vh] rounded-[2rem] sm:rounded-[2.5rem] bg-card/95 backdrop-blur-3xl border-white/10 p-0 overflow-hidden shadow-2xl flex flex-col sm:flex-row">
+                          <CourseModalContent cert={cert} />
                         </DialogContent>
                       </Dialog>
                     ) : cert.url ? (
@@ -979,7 +1125,7 @@ export default function Portfolio() {
       {/* Back to Top - Floating Button (WhatsApp Style) */}
       <button
         onClick={() => scrollToSection("sobre")}
-        className={`fixed bottom-32 right-6 z-[60] p-4 rounded-full glass-card border border-white/10 shadow-2xl transition-all duration-500 group ${scrolled ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+        className={`fixed bottom-32 right-6 z-[60] p-4 rounded-full glass-card border border-white/10 shadow-2xl transition-all duration-500 group ${scrolled && !isModalOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
           }`}
       >
         <ChevronUp className="h-6 w-6 text-primary group-hover:-translate-y-1 transition-transform" />
