@@ -6,16 +6,16 @@ import { LoadingScreen } from '@/components/loading-screen'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Jean Correa | Desenvolvedor Backend',
-  description: 'Desenvolvedor Backend especializado em Supabase, PostgreSQL, APIs REST e PM2. Transformo ideias em soluções robustas e escaláveis.',
-  keywords: ['Desenvolvedor Backend', 'Supabase', 'PostgreSQL', 'Node.js', 'Python', 'APIs REST', 'PM2', 'Jean Correa'],
+  title: 'Jean Correa | Desenvolvedor FullStack',
+  description: 'Desenvolvedor FullStack especializado em React, Next.js, Python e integrações ERP. Transformo ideias em soluções robustas e escaláveis.',
+  keywords: ['Desenvolvedor FullStack', 'React', 'Next.js', 'Python', 'Supabase', 'PostgreSQL', 'APIs REST', 'Jean Correa'],
   authors: [{ name: 'Jean Correa' }],
   creator: 'Jean Correa',
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    title: "Jean Correa | Engenheiro de Software",
-    description: "Desenvolvedor Backend especializado em soluções robustas e escaláveis.",
+    title: "Jean Correa | Desenvolvedor FullStack",
+    description: "Desenvolvedor FullStack especializado em soluções robustas e escaláveis.",
     siteName: "Jean Correa Portfolio",
   },
   icons: {
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Jean Correa | Desenvolvedor Backend',
-    description: 'Desenvolvedor Backend especializado em Supabase, PostgreSQL, APIs REST e PM2',
+    title: 'Jean Correa | Desenvolvedor FullStack',
+    description: 'Desenvolvedor FullStack especializado em React, Next.js, Python e integrações ERP',
   },
 }
 

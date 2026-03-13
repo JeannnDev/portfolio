@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
-import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, Code2, Database, Server, Terminal, Filter, X, Copy, Check } from "lucide-react"
+import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, Code2, Database, Server, Terminal, Filter, X, Copy, Check, GraduationCap, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -14,8 +14,17 @@ import { SkillsCarousel } from "@/components/skills-carousel"
 import { ProjectCarousel } from "@/components/project-carousel"
 import { MobileNav } from "@/components/mobile-nav"
 import LogoLoop from "@/components/logo-loop"
-import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiPostgresql, SiSupabase, SiN8N, SiJavascript, SiHtml5, SiCss3, SiGit, SiMysql } from 'react-icons/si';
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiPostgresql, SiSupabase, SiN8N, SiJavascript, SiHtml5, SiCss3, SiGit, SiMysql, SiDocker, SiNginx, SiCloudflare } from 'react-icons/si';
 import { toast, Toaster } from "sonner"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 const techLogos = [
   { node: <SiReact />, title: "React", href: "https://react.dev" },
@@ -31,6 +40,9 @@ const techLogos = [
   { node: <SiCss3 />, title: "CSS3", href: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
   { node: <SiGit />, title: "Git", href: "https://git-scm.com" },
   { node: <SiMysql />, title: "MySQL", href: "https://www.mysql.com" },
+  { node: <SiDocker />, title: "Docker", href: "https://www.docker.com" },
+  { node: <SiNginx />, title: "Nginx", href: "https://www.nginx.com" },
+  { node: <SiCloudflare />, title: "Cloudflare", href: "https://www.cloudflare.com" },
 ];
 
 const navItems = [
@@ -44,7 +56,7 @@ const navItems = [
 const skills = [
   { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", level: 4, category: "Backend" },
   { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", level: 3, category: "Frontend" },
-  { name: "Supabase", icon: "https://seeklogo.com/images/S/supabase-logo-DCC676FFE2-seeklogo.com.png", level: 3, category: "Backend" },
+  { name: "Supabase", icon: "https://cdn.simpleicons.org/supabase/3ECF8E", level: 3, category: "Backend" },
   { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg", level: 3, category: "Database" },
   { name: "PM2", icon: "https://cdn.simpleicons.org/pm2/24B9FF", level: 4, category: "DevOps" },
   { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg", level: 3, category: "Database" },
@@ -56,11 +68,52 @@ const skills = [
   { name: "XAMPP", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apache/apache-original.svg", level: 3, category: "DevOps" },
   { name: "Totvs Protheus", icon: "https://www.systax.com.br/site/wp-content/uploads/2023/06/Systax-parceiros-logo-Totvs.jpg", level: 2, category: "Backend" },
   { name: "Lua", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/lua/lua-original.svg", level: 1, category: "Backend" },
+  { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg", level: 3, category: "DevOps" },
+  { name: "Nginx", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg", level: 3, category: "DevOps" },
+  { name: "Cloudflare", icon: "https://cdn.simpleicons.org/cloudflare/F38020", level: 3, category: "DevOps" },
 ]
 
-const certificates = [
+interface Course {
+  name: string;
+  url: string;
+}
+
+interface Certificate {
+  title: string;
+  institution: string;
+  date: string;
+  isGroup?: boolean;
+  url?: string;
+  courses?: Course[];
+}
+
+const certificates: Certificate[] = [
   { title: "Engenharia de Software", institution: "Uninter (Em andamento)", date: "2025" },
-  { title: "Formação Backend (Python, SQL, Git)", institution: "Alura", date: "138h" },
+  {
+    title: "Formações Alura",
+    institution: "Alura",
+    date: "2022 - 2024",
+    isGroup: true,
+    courses: [
+      { name: "Técnicas Computacionais: IA na Escola", url: "https://cursos.alura.com.br/certificate/015e1b04-d64e-4522-b48f-ea2ad9d33fa5?lang" },
+      { name: "Segurança Digital: Senhas Seguras", url: "https://cursos.alura.com.br/certificate/f6cdd565-a823-49a3-a206-8e6966aaaa98?lang" },
+      { name: "Projeto de Vida: Matemática Aplicada", url: "https://cursos.alura.com.br/certificate/26fc3472-e5d6-4f5e-bfb7-d5da022f1b6e?lang" },
+      { name: "Lógica de programação: Pong e JS", url: "https://cursos.alura.com.br/certificate/5d2af361-c232-44b2-a20d-f22b4741cb16?lang" },
+      { name: "Introdução à computação", url: "https://cursos.alura.com.br/certificate/dd8b6aa5-57b0-4e55-bc0a-4ce3dc24ecb2?lang" },
+      { name: "HTML5 e CSS3 parte 4", url: "https://cursos.alura.com.br/certificate/c128ed1a-d750-48b3-92fb-98e8cbb92426?lang" },
+      { name: "HTML5 e CSS3 parte 3", url: "https://cursos.alura.com.br/certificate/4b7e5ac1-05f5-4b90-9fbe-5be7b6f93b7b?lang" },
+      { name: "HTML5 e CSS3 parte 1", url: "https://cursos.alura.com.br/certificate/6ea55a85-cbcd-4db6-8491-c35652201480?lang" },
+      { name: "HTML e CSS: Criatividade", url: "https://cursos.alura.com.br/certificate/57d5e9bf-d291-4238-b739-b06083a4b0de?lang" },
+      { name: "HTML e CSS: Responsividade", url: "https://cursos.alura.com.br/certificate/ba76cc9e-999e-4b74-b4d0-c2fc15ce47a9?lang" },
+      { name: "HTML e CSS: Praticando", url: "https://cursos.alura.com.br/certificate/891686e7-2fde-49ef-8c99-33a314587efe?lang" },
+      { name: "Hábitos: Produtividade", url: "https://cursos.alura.com.br/certificate/e772db08-e0ba-4647-abbd-1de089013640?lang" },
+      { name: "Github: Portfólio Digital", url: "https://cursos.alura.com.br/certificate/37991db7-9b12-4ef6-ac10-ef89b2f5d256?lang" },
+      { name: "Funções: Missão sobre IA", url: "https://cursos.alura.com.br/certificate/dcf1659e-0c5b-474d-ae67-5db59664a2c8?lang" },
+      { name: "Ciência de dados: Gráficos JS", url: "https://cursos.alura.com.br/certificate/31075964-f6b5-4fcb-9ce8-3e9a1d73bf93?lang" },
+      { name: "Análise de Dados: Narrativas", url: "https://cursos.alura.com.br/certificate/634c0503-398b-499a-a3ec-52a88d59c973?lang" },
+      { name: "Agrinho: Pense, crie e participe", url: "https://cursos.alura.com.br/certificate/345fcffd-32ab-4681-95a6-0f4047079b20?lang" }
+    ]
+  },
   { title: "Jornada Python", institution: "Hashtag Treinamentos", date: "8h" },
 ]
 
@@ -139,7 +192,7 @@ const projects = [
 
 const stats = [
   { value: "2+", label: "Anos de Experiência" },
-  { value: "138h+", label: "Horas de Formação" },
+  { value: "876h+", label: "Horas de aprendizado" },
   { value: "8+", label: "Projetos Reais" },
   { value: "15+", label: "Tecnologias" },
 ]
@@ -166,12 +219,12 @@ export default function Portfolio() {
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null)
   const [isCopied, setIsCopied] = useState(false)
 
-  const typingWords = ["Backend", "Automação", "APIs REST", "Integrações"]
+  const typingWords = ["FullStack", "Backend", "Automação", "APIs REST", "Integrações"]
   const typedText = useTypingEffect(typingWords, 150, 100, 2000)
 
   const copyEmail = (e: React.MouseEvent) => {
     e.preventDefault()
-    const email = "seu-email@exemplo.com"
+    const email = "jeannn.dev@gmail.com"
     navigator.clipboard.writeText(email)
     setIsCopied(true)
     toast.success("E-mail copiado!", {
@@ -220,7 +273,7 @@ export default function Portfolio() {
 
 
   // Main stacks that people look for in a dev
-  const mainStacks = ["Next.js", "TypeScript", "Python", "TOTVS Protheus", "ERP Integration", "PostgreSQL", "Supabase"]
+  const mainStacks = ["Next.js", "TypeScript", "Python", "TOTVS Protheus", "ERP Integration", "PostgreSQL", "Supabase", "Docker", "Nginx", "Cloudflare"]
 
   // Filter projects by selected tag
   const filteredProjects = selectedFilter
@@ -275,7 +328,7 @@ export default function Portfolio() {
               </div>
               <div className="flex flex-col items-start -space-y-0.5">
                 <span className="text-xl font-black tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">Jean Correa</span>
-                <span className="text-[10px] text-primary/60 font-bold tracking-[0.4em] uppercase">Developer</span>
+                <span className="text-[10px] text-primary/60 font-bold tracking-[0.4em] uppercase">FullStack Developer</span>
               </div>
             </button>
 
@@ -317,24 +370,38 @@ export default function Portfolio() {
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               {/* Left Column - Text */}
               <div className="order-2 lg:order-1 text-center lg:text-left">
-                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-8 leading-[1.1] tracking-tight">
-                  Desenvolvedor{" "}<br className="hidden sm:block" />
+                {/* Hero Badge Removed */}
+
+                <h1 className="text-5xl sm:text-6xl lg:text-8xl font-black mb-8 leading-[1] tracking-tight">
+                  Software<br className="hidden sm:block" />
                   <span className="text-gradient inline-block min-w-[200px]">
                     {typedText}
-                    <span className="animate-pulse">|</span>
                   </span>
                 </h1>
 
-                <p className="text-lg lg:text-2xl text-muted-foreground/80 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                  Graduando em <span className="text-foreground font-bold underline decoration-primary/30 underline-offset-4">Engenharia de Software</span>. Transformo desafios técnicos em soluções robustas de <span className="text-foreground font-bold">Backend e Automação</span>.
+                <p className="text-lg lg:text-xl text-muted-foreground/80 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                  Graduando em <span className="text-foreground font-bold underline decoration-primary/30 underline-offset-8">Engenharia de Software</span>. Especialista em arquiteturas <span className="text-foreground font-bold">FullStack</span>, automações de alto impacto e integrações nativas com <span className="text-foreground font-bold italic">TOTVS Protheus</span>.
                 </p>
 
-                {/* Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+                {/* Stats - Unified Glass Container */}
+                <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-y-8 mb-10 p-6 sm:p-8 rounded-[2rem] bg-card/30 backdrop-blur-md border border-white/5 shadow-lg relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 pointer-events-none" />
+
                   {stats.map((stat, index) => (
-                    <div key={index} className="flex flex-col p-4 rounded-2xl bg-card/40 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 group">
-                      <div className="text-2xl lg:text-3xl font-black text-primary group-hover:scale-110 transition-transform">{stat.value}</div>
-                      <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{stat.label}</div>
+                    <div key={index} className="flex-1 flex items-center justify-center relative w-1/2 sm:w-auto">
+                      <div className="flex flex-col text-center group">
+                        <div className="text-3xl md:text-4xl font-black text-foreground group-hover:text-primary transition-all duration-300 leading-none">
+                          {stat.value}
+                        </div>
+                        <div className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.15em] mt-3">
+                          {stat.label}
+                        </div>
+                      </div>
+
+                      {/* Vertical Divider for Desktop */}
+                      {index < stats.length - 1 && (
+                        <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 w-px h-12 bg-foreground/10" />
+                      )}
                     </div>
                   ))}
                 </div>
@@ -351,73 +418,56 @@ export default function Portfolio() {
                 </div>
               </div>
 
-              {/* Right Column - Visual */}
-              <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-                <div className="relative animate-in fade-in zoom-in duration-1000">
-                  {/* Subtle Background Glow */}
-                  <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full opacity-50" />
+              {/* Right Column - Visual (Professional Photo Container) */}
+              <div className="order-1 lg:order-2 flex justify-center lg:justify-end relative">
+                <div className="relative w-full max-w-[320px] sm:max-w-[400px] aspect-[4/5] animate-in fade-in zoom-in duration-1000 mt-8 lg:mt-0">
+                  {/* Main Photo Container - Cleaned up without heavy effects */}
+                  <div className="absolute inset-0 bg-card/40 backdrop-blur-sm border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col items-center justify-end group transition-all duration-500 hover:border-primary/30">
 
-                  {/* About Card Wrapper */}
-                  <div className="relative">
-                    <Card className="glass-card p-8 rounded-[2rem] border border-white/10 max-w-sm sm:max-w-md w-full shadow-2xl backdrop-blur-md bg-white/[0.02]">
-                      <div className="space-y-6 text-left relative z-10">
-                        <div className="flex items-center gap-6">
-                          <div className="relative">
-                            <div className="h-20 w-20 rounded-full bg-primary/20 p-[2px]">
-                              <div className="h-full w-full rounded-full bg-background overflow-hidden relative">
-                                <Image
-                                  src="/logo.png"
-                                  alt="Jean Correa Logo"
-                                  fill
-                                  className="object-cover"
-                                  priority
-                                />
-                              </div>
-                            </div>
-                            <div className="absolute bottom-1 right-1 h-4 w-4 rounded-full bg-green-500 border-2 border-background shadow-lg" />
-                          </div>
-                          <div>
-                            <h2 className="text-2xl font-black tracking-tight mb-1 text-foreground">Jean Correa</h2>
-                          </div>
-                        </div>
+                    {/* Placeholder para Foto do Usuário (.png com fundo transparente fica melhor) */}
+                    <div className="relative w-full h-full transition-transform duration-700 group-hover:scale-105 origin-bottom">
+                      <Image
+                        src="/jean.png"
+                        alt="Jean Correa"
+                        fill
+                        className="object-contain object-bottom drop-shadow-2xl"
+                        priority
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E";
+                          target.style.opacity = '0.3';
+                          target.style.padding = '3rem';
+                        }}
+                      />
+                    </div>
 
-                        <div className="space-y-5">
-                          <p className="text-sm text-muted-foreground leading-relaxed">
-                            Especialista em construir <span className="text-foreground font-bold">experiências digitais resilientes</span> e arquiteturas backend modernas integradas ao <span className="text-primary/90 font-bold">ERP Protheus</span>.
-                          </p>
-                          <div className="flex gap-3">
-                            <Button
-                              variant="outline"
-                              className="rounded-xl font-bold bg-white/5 hover:bg-white/10 border-white/10 flex-1 h-11 text-xs transition-all"
-                              onClick={copyEmail}
-                            >
-                              {isCopied ? <Check className="mr-2 h-4 w-4 text-green-400" /> : <Copy className="mr-2 h-4 w-4" />}
-                              {isCopied ? "Copiado!" : "E-mail"}
-                            </Button>
-                            <Button className="rounded-xl font-bold flex-1 h-11 text-xs bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
-                              Hire Me
-                            </Button>
-                          </div>
-                        </div>
+                    {/* Subtle gradient just at the bottom for text legibility, doesn't hide the photo */}
+                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background/90 to-transparent z-10 pointer-events-none" />
 
-                        <div className="flex gap-3 pt-2">
-                          {[
-                            { icon: Github, href: "https://github.com/jeanvst" },
-                            { icon: Linkedin, href: "https://linkedin.com/in/jean-victor-dev" }
-                          ].map((social, i) => (
-                            <a
-                              key={i}
-                              href={social.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground hover:text-primary transition-all duration-300"
-                            >
-                              <social.icon className="h-4 w-4" />
-                            </a>
-                          ))}
-                        </div>
+                    {/* Floating Info Bottom */}
+                    <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 rounded-2xl bg-card/80 backdrop-blur-xl border border-white/10 shadow-xl transition-transform duration-500 sm:translate-y-2 opacity-95 group-hover:translate-y-0 group-hover:opacity-100 gap-4 sm:gap-0">
+                      <div className="text-left">
+                        <h3 className="text-lg sm:text-xl font-black text-foreground leading-tight">Jean Correa</h3>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-widest font-black mt-1">FullStack Developer</p>
                       </div>
-                    </Card>
+
+                      <div className="flex gap-2">
+                        {[
+                          { icon: Github, href: "https://github.com/JeannnDev" },
+                          { icon: Linkedin, href: "https://www.linkedin.com/in/jean-correa-908720292/" }
+                        ].map((social, i) => (
+                          <a
+                            key={i}
+                            href={social.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="h-10 w-10 rounded-xl bg-background/50 border border-white/5 flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 shadow-inner"
+                          >
+                            <social.icon className="h-4 w-4" />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -564,20 +614,148 @@ export default function Portfolio() {
               {certificates.map((cert, index) => (
                 <div key={index} className="flex-none w-[80vw] md:w-auto snap-center">
                   <AnimatedSection animation="fade-up" delay={index * 100} className="h-full">
-                    <Card className="glass-card group hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full">
-                      <CardContent className="p-8 flex flex-col h-full gap-4">
-                        <div className="p-4 rounded-2xl bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors shadow-inner">
-                          <Award className="h-6 w-6 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-black text-lg tracking-tight group-hover:text-primary transition-colors leading-tight mb-2">{cert.title}</h3>
-                          <p className="text-sm text-muted-foreground/80 font-medium mb-4">{cert.institution}</p>
-                        </div>
-                        <div className="mt-auto">
-                          <span className="text-[10px] font-black tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full">{cert.date}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    {cert.isGroup ? (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button className="w-full text-left h-full group outline-none">
+                            <Card className="glass-card group-hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5 hover:border-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
+                              <CardContent className="p-8 flex flex-col h-full gap-4">
+                                <div className="flex justify-between items-start">
+                                  <div className="p-4 rounded-2xl bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors shadow-inner">
+                                    <GraduationCap className="h-6 w-6 text-primary" />
+                                  </div>
+                                  <Badge variant="secondary" className="bg-primary/20 text-primary border-none text-[10px] font-bold">
+                                    {cert.courses?.length} Cursos
+                                  </Badge>
+                                </div>
+                                <div>
+                                  <h3 className="font-black text-lg tracking-tight group-hover:text-primary transition-colors leading-tight mb-2">{cert.title}</h3>
+                                  <p className="text-sm text-muted-foreground/80 font-medium mb-4">{cert.institution}</p>
+                                </div>
+                                <div className="mt-auto">
+                                  <span className="text-[10px] font-black tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full">{cert.date}</span>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[95vw] lg:max-w-[1100px] h-[95vh] sm:h-[85vh] rounded-[2.5rem] bg-card/95 backdrop-blur-2xl border-white/10 p-0 overflow-hidden shadow-2xl flex flex-col sm:flex-row">
+                          <Tabs defaultValue="course-0" className="flex-1 flex flex-col sm:flex-row overflow-hidden">
+                            {/* Sidebar / Navigation */}
+                            <div className="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-white/5 flex flex-col bg-card/40 backdrop-blur-3xl overflow-hidden">
+                              <div className="p-6 pb-2">
+                                <div className="flex items-center gap-3 mb-6">
+                                  <div className="p-2.5 rounded-xl bg-primary/10">
+                                    <GraduationCap className="h-5 w-5 text-primary" />
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <DialogTitle className="text-lg font-black tracking-tight">{cert.title}</DialogTitle>
+                                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black">{cert.courses?.length} Conquistas</p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="flex-1 px-4 pb-6 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
+                                <TabsList className="flex flex-row sm:flex-col bg-transparent w-full h-auto p-0 gap-1 justify-start overflow-x-auto sm:overflow-visible scrollbar-hide">
+                                  {cert.courses?.map((course, i) => (
+                                    <TabsTrigger
+                                      key={i}
+                                      value={`course-${i}`}
+                                      className="flex-shrink-0 sm:flex-shrink sm:w-full justify-start text-left rounded-xl px-4 py-3 text-xs font-bold transition-all data-[state=active]:bg-primary/10 data-[state=active]:text-primary group/tab border border-transparent data-[state=active]:border-primary/20"
+                                    >
+                                      <div className="flex items-center gap-3 truncate w-full">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-primary/40 group-data-[state=active]/tab:bg-primary transition-all shrink-0" />
+                                        <span className="truncate">{course.name}</span>
+                                      </div>
+                                    </TabsTrigger>
+                                  ))}
+                                </TabsList>
+                              </div>
+                            </div>
+
+                            {/* Main Content Area */}
+                            <div className="flex-1 flex flex-col overflow-hidden bg-background/40">
+                              {cert.courses?.map((course, i) => (
+                                <TabsContent key={i} value={`course-${i}`} className="flex-1 flex flex-col overflow-hidden m-0 p-6 sm:p-10 outline-none">
+                                  {/* Just the Certificate Image completely filling the space */}
+                                  <div className="flex-1 w-full h-full p-4 flex items-center justify-center">
+                                    <a
+                                      href={course.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="w-full h-full relative group/screenshot flex min-h-[500px] border border-white/10 rounded-[2.5rem] overflow-hidden bg-black/40 shadow-2xl transition-all duration-700 hover:shadow-primary/20 hover:scale-[1.005]"
+                                    >
+                                      {/* Animated Background Loader */}
+                                      <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 bg-gradient-to-br from-[#051933]/50 to-black z-0">
+                                        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                                      </div>
+
+                                      {/* The "Rendered Link as Image" - Dynamic Screenshot */}
+                                      <img
+                                        src={`https://s0.wp.com/mshots/v1/${encodeURIComponent(course.url)}?w=1280`}
+                                        alt={`Certificado: ${course.name}`}
+                                        className="w-full h-full object-cover object-center relative z-10 opacity-0 transition-opacity duration-1000"
+                                        onLoad={(e) => {
+                                          const target = e.target as HTMLImageElement;
+                                          target.style.opacity = '1';
+                                        }}
+                                        onError={(e) => {
+                                          const target = e.target as HTMLImageElement;
+                                          target.style.display = 'none';
+                                        }}
+                                      />
+
+                                      {/* Visual Border Overlay & Hover Icon */}
+                                      <div className="absolute inset-0 border border-white/5 pointer-events-none z-20 rounded-[2.5rem]"></div>
+                                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/screenshot:opacity-100 transition-opacity duration-300 z-30 flex items-center justify-center">
+                                        <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center shadow-2xl text-primary-foreground transform scale-50 group-hover/screenshot:scale-100 transition-transform duration-500">
+                                          <ExternalLink className="h-6 w-6" />
+                                        </div>
+                                      </div>
+                                    </a>
+                                  </div>
+                                </TabsContent>
+                              ))}
+                            </div>
+                          </Tabs>
+                        </DialogContent>
+                      </Dialog>
+                    ) : cert.url ? (
+                      <a href={cert.url} target="_blank" rel="noopener noreferrer" className="block h-full group">
+                        <Card className="glass-card group-hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5 hover:border-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
+                          <CardContent className="p-8 flex flex-col h-full gap-4">
+                            <div className="flex justify-between items-start">
+                              <div className="p-4 rounded-2xl bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors shadow-inner">
+                                <Award className="h-6 w-6 text-primary" />
+                              </div>
+                              <ExternalLink className="h-4 w-4 text-muted-foreground/30 group-hover:text-primary transition-colors" />
+                            </div>
+                            <div>
+                              <h3 className="font-black text-lg tracking-tight group-hover:text-primary transition-colors leading-tight mb-2">{cert.title}</h3>
+                              <p className="text-sm text-muted-foreground/80 font-medium mb-4">{cert.institution}</p>
+                            </div>
+                            <div className="mt-auto">
+                              <span className="text-[10px] font-black tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full">{cert.date}</span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </a>
+                    ) : (
+                      <Card className="glass-card hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5">
+                        <CardContent className="p-8 flex flex-col h-full gap-4">
+                          <div className="p-4 rounded-2xl bg-primary/10 w-fit transition-colors shadow-inner">
+                            <Award className="h-6 w-6 text-primary" />
+                          </div>
+                          <div>
+                            <h3 className="font-black text-lg tracking-tight leading-tight mb-2">{cert.title}</h3>
+                            <p className="text-sm text-muted-foreground/80 font-medium mb-4">{cert.institution}</p>
+                          </div>
+                          <div className="mt-auto">
+                            <span className="text-[10px] font-black tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full">{cert.date}</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
                   </AnimatedSection>
                 </div>
               ))}
@@ -608,7 +786,7 @@ export default function Portfolio() {
                         <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
                           {isCopied ? <Check className="h-8 w-8 text-primary animate-in zoom-in" /> : <Mail className="h-8 w-8 text-primary" />}
                         </div>
-                        <p className="text-lg font-black group-hover:text-primary transition-colors tracking-tight relative z-10">seu-email@exemplo.com</p>
+                        <p className="text-lg font-black group-hover:text-primary transition-colors tracking-tight relative z-10">jeannn.dev@gmail.com</p>
                         <div className="flex items-center gap-2 mt-2 relative z-10">
                           <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{isCopied ? "Copiado!" : "Clique para copiar"}</p>
                           {!isCopied && <Copy className="h-3 w-3 text-muted-foreground" />}
@@ -617,8 +795,8 @@ export default function Portfolio() {
 
                       <div className="flex gap-4">
                         {[
-                          { icon: Github, label: "GitHub", href: "https://github.com/seu-usuario" },
-                          { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/in/seu-perfil" }
+                          { icon: Github, label: "GitHub", href: "https://github.com/JeannnDev" },
+                          { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/jean-correa-908720292/" }
                         ].map((social, i) => (
                           <a
                             key={i}
