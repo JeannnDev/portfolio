@@ -49,8 +49,49 @@ const navItems = [
   { id: "sobre", label: "Sobre" },
   { id: "projetos", label: "Projetos" },
   { id: "skills", label: "Skills" },
+  { id: "experiencia", label: "Experiência" },
   { id: "certificados", label: "Certificados" },
   { id: "contato", label: "Contato" },
+]
+
+const experiences = [
+  {
+    company: "GRUPO AIZ",
+    companyLogo: "/aiz.png",
+    totalDuration: "2 a 6 m",
+    location: "São José dos Pinhais, Paraná, Brasil · Presencial",
+    roles: [
+      {
+        title: "Desenvolvedor Full Stack",
+        type: "Tempo integral",
+        period: "jul de 2025 – o momento · 9 meses",
+        current: true,
+        description: [
+          "Desenvolvimento e manutenção de aplicações web utilizando React, TypeScript, Python e Node.js.",
+          "Criação de APIs e integrações entre sistemas, incluindo consumo de APIs REST e automações de processos.",
+          "Desenvolvimento de sistemas internos como plataformas de chamados, gestão de arquivos e interfaces administrativas.",
+          "Integração e manipulação de bancos de dados PostgreSQL, MongoDB e Supabase, com foco em performance.",
+          "Implementação de automações e pipelines de dados ETL entre SQL Server e PostgreSQL.",
+          "Configuração e gerenciamento de ambientes com PM2, Docker e servidores Linux.",
+        ],
+        skills: ["React", "TypeScript", "Python", "Node.js", "PostgreSQL", "MongoDB", "Docker", "PM2", "TOTVS Protheus", "REST APIs", "ETL"],
+      },
+      {
+        title: "Aprendiz",
+        type: "Meio período",
+        period: "out de 2023 – jul de 2025 · 1 ano 10 meses",
+        current: false,
+        description: [
+          "Desenvolvimento Back‑End com Python e Node.js.",
+          "Criação e manutenção de APIs RESTful integradas ao Supabase.",
+          "Manutenção de código ADVPL e criação de Web Services para integração com ERP TOTVS Protheus.",
+          "Manipulação e otimização de bancos de dados SQL Server.",
+          "Versionamento de código com Git e deploy de aplicações em ambiente de produção.",
+        ],
+        skills: ["Python", "Node.js", "ADVPL", "Supabase", "SQL Server", "Git", "TOTVS Protheus"],
+      },
+    ],
+  },
 ]
 
 const skills = [
@@ -235,39 +276,46 @@ export default function Portfolio() {
   }
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
+    // Scroll state for header blur
+    const handleScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener("scroll", handleScroll)
 
-      const sections = navItems.map((item) => document.getElementById(item.id))
-      const scrollPosition = window.scrollY + 150
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i]
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(navItems[i].id)
-          break
-        }
-      }
+    // IntersectionObserver for reliable active-section detection
+    const observerOptions: IntersectionObserverInit = {
+      root: null,
+      rootMargin: "-30% 0px -60% 0px", // trigger when section is in the upper 40% of viewport
+      threshold: 0,
     }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id)
+        }
+      })
+    }, observerOptions)
+
+    navItems.forEach(({ id }) => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
 
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
-
-    window.addEventListener("scroll", handleScroll)
     window.addEventListener("mousemove", handleMouseMove)
+
     return () => {
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("mousemove", handleMouseMove)
+      observer.disconnect()
     }
   }, [])
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
     if (element) {
-      const offset = 80
-      const elementPosition = element.offsetTop - offset
-      window.scrollTo({ top: elementPosition, behavior: "smooth" })
+      const y = element.getBoundingClientRect().top + window.scrollY - 80
+      window.scrollTo({ top: y, behavior: "smooth" })
     }
   }
 
@@ -597,8 +645,103 @@ export default function Portfolio() {
           </div>
         </section>
 
+        {/* Experience Section */}
+        <section id="experiencia" className="py-12 md:py-24 lg:py-32 bg-card/30 scroll-mt-20">
+          <div className="container mx-auto px-4 lg:px-8">
+            <AnimatedSection animation="fade-up">
+              <div className="max-w-2xl mb-12">
+                <span className="text-primary text-sm font-medium tracking-wider uppercase">Carreira</span>
+                <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-4">Experiência Profissional</h2>
+                <p className="text-muted-foreground">Minha trajetória e as contribuições que realizei ao longo dos anos.</p>
+              </div>
+            </AnimatedSection>
+
+            <div className="flex flex-col gap-12 max-w-3xl">
+              {experiences.map((exp, ei) => (
+                <AnimatedSection key={ei} animation="fade-up" delay={ei * 80}>
+                  <div className="flex gap-5">
+
+                    {/* LEFT — logo anchored to a vertical line */}
+                    <div className="flex flex-col items-center shrink-0">
+                      <div className="w-[58px] h-[58px] rounded-2xl glass-card border border-white/10 shadow-lg overflow-hidden p-1.5 shrink-0 flex items-center justify-center">
+                        <Image src={exp.companyLogo} alt={exp.company} width={48} height={48} className="w-full h-full object-contain" />
+                      </div>
+                      {/* Vertical line flowing down through all roles */}
+                      <div className="flex-1 w-px mt-3 bg-gradient-to-b from-primary/40 via-border/40 to-transparent" />
+                    </div>
+
+                    {/* RIGHT — company info + nested roles */}
+                    <div className="flex-1 min-w-0 pb-4">
+
+                      {/* Company header */}
+                      <div className="flex items-start justify-between gap-3 mb-7 pt-1.5">
+                        <div>
+                          <h3 className="text-base font-black text-foreground tracking-tight">{exp.company}</h3>
+                          <p className="text-[11px] text-muted-foreground/60 mt-0.5 font-medium">{exp.totalDuration}</p>
+                          <p className="text-[11px] text-muted-foreground/40 mt-0.5">{exp.location}</p>
+                        </div>
+                      </div>
+
+                      {/* Roles */}
+                      <div className="flex flex-col gap-7">
+                        {exp.roles.map((role, ri) => (
+                          <div key={ri} className="flex gap-4 group">
+
+                            {/* Dot sitting exactly on the vertical line */}
+                            <div className="shrink-0 -ml-[31px] mt-1">
+                              <div className={`w-3 h-3 rounded-full border-2 transition-all duration-300 group-hover:scale-125 ${role.current
+                                ? "bg-primary border-primary shadow-[0_0_10px_2px] shadow-primary/40"
+                                : "bg-background border-border group-hover:border-primary/50"
+                                }`} />
+                            </div>
+
+                            {/* Role body */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 mb-3">
+                                <div>
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <h4 className="text-[15px] font-black text-foreground">{role.title}</h4>
+                                    {role.current && (
+                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-primary/15 text-primary border border-primary/20">Atual</span>
+                                    )}
+                                  </div>
+                                  <p className="text-xs text-muted-foreground/60 mt-0.5">{role.type}</p>
+                                  <p className="text-[11px] text-muted-foreground/40 mt-0.5">{role.period}</p>
+                                </div>
+                              </div>
+
+                              <ul className="space-y-1.5 mb-4">
+                                {role.description.map((item, di) => (
+                                  <li key={di} className="flex gap-2.5 text-sm text-muted-foreground/75 leading-relaxed">
+                                    <span className="mt-2 w-1 h-1 rounded-full bg-primary/50 shrink-0" />
+                                    <span>{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
+
+                              <div className="flex flex-wrap gap-1.5">
+                                {role.skills.map((skill, si) => (
+                                  <span key={si} className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-background/40 border border-border/50 text-muted-foreground/70 hover:border-primary/40 hover:text-foreground transition-all duration-200">
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
+          </div>
+        </section>
+
+
         {/* Certificates Section */}
         <section id="certificados" className="py-12 md:py-24 lg:py-32 scroll-mt-20">
+
           <div className="container mx-auto px-4 lg:px-8">
             <AnimatedSection animation="fade-up">
               <div className="max-w-2xl mb-12">
@@ -761,10 +904,10 @@ export default function Portfolio() {
               ))}
             </div>
           </div>
-        </section>
+        </section >
 
         {/* Contact Section */}
-        <section id="contato" className="py-20 lg:py-32 bg-card/30">
+        < section id="contato" className="py-20 lg:py-32 bg-card/30" >
           <div className="container mx-auto px-4 lg:px-8">
             <AnimatedSection animation="fade-up">
               <div className="max-w-2xl mx-auto text-center">
@@ -816,11 +959,11 @@ export default function Portfolio() {
               </div>
             </AnimatedSection>
           </div>
-        </section>
-      </main>
+        </section >
+      </main >
 
       {/* Footer */}
-      <footer className="py-8 border-t border-border/50">
+      < footer className="py-8 border-t border-border/50" >
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-16 md:mb-0">
             <p className="text-sm text-muted-foreground">
@@ -831,9 +974,9 @@ export default function Portfolio() {
             </p>
           </div>
         </div>
-      </footer>
+      </footer >
 
       <MobileNav />
-    </div>
+    </div >
   )
 }
