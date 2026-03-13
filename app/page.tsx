@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
-import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, Code2, Database, Server, Terminal, Filter, X, Copy, Check, GraduationCap, FileText } from "lucide-react"
+import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, ChevronUp, Code2, Database, Server, Terminal, Filter, X, Copy, Check, GraduationCap, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -976,7 +976,16 @@ export default function Portfolio() {
         </div>
       </footer >
 
+      {/* Back to Top - Floating Button (WhatsApp Style) */}
+      <button
+        onClick={() => scrollToSection("sobre")}
+        className={`fixed bottom-32 right-6 z-[60] p-4 rounded-full glass-card border border-white/10 shadow-2xl transition-all duration-500 group ${scrolled ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+          }`}
+      >
+        <ChevronUp className="h-6 w-6 text-primary group-hover:-translate-y-1 transition-transform" />
+      </button>
+
       <MobileNav />
-    </div >
+    </div>
   )
 }

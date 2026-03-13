@@ -1,43 +1,47 @@
 "use client"
 
-import { Home, FolderGit2, Cpu, Award, Mail } from "lucide-react"
+import { Briefcase, FolderGit2, Cpu, Award, Mail } from "lucide-react"
 import { useEffect, useState } from "react"
 
 const navItems = [
-    { id: "sobre", label: "Início", icon: Home },
     { id: "projetos", label: "Projetos", icon: FolderGit2 },
     { id: "skills", label: "Skills", icon: Cpu },
+    { id: "experiencia", label: "Exp.", icon: Briefcase },
     { id: "certificados", label: "Certific.", icon: Award },
     { id: "contato", label: "Contato", icon: Mail },
 ]
 
 export function MobileNav() {
-    const [activeSection, setActiveSection] = useState("sobre")
+    const [activeSection, setActiveSection] = useState("projetos")
 
     useEffect(() => {
-        const handleScroll = () => {
-            const sections = navItems.map((item) => document.getElementById(item.id))
-            const scrollPosition = window.scrollY + window.innerHeight / 2
-
-            for (let i = sections.length - 1; i >= 0; i--) {
-                const section = sections[i]
-                if (section && section.offsetTop <= scrollPosition) {
-                    setActiveSection(navItems[i].id)
-                    break
-                }
-            }
+        // IntersectionObserver for reliable active-section detection
+        const observerOptions: IntersectionObserverInit = {
+            root: null,
+            rootMargin: "-30% 0px -60% 0px",
+            threshold: 0,
         }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveSection(entry.target.id)
+                }
+            })
+        }, observerOptions)
 
-        window.addEventListener("scroll", handleScroll)
-        return () => window.removeEventListener("scroll", handleScroll)
+        navItems.forEach(({ id }) => {
+            const el = document.getElementById(id)
+            if (el) observer.observe(el)
+        })
+
+        return () => observer.disconnect()
     }, [])
 
     const scrollToSection = (id: string) => {
         const element = document.getElementById(id)
         if (element) {
-            const offset = 80
-            const elementPosition = element.offsetTop - offset
-            window.scrollTo({ top: elementPosition, behavior: "smooth" })
+            const y = element.getBoundingClientRect().top + window.scrollY - 80
+            window.scrollTo({ top: y, behavior: "smooth" })
             setActiveSection(id)
         }
     }
