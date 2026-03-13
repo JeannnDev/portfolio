@@ -14,7 +14,7 @@ import { SkillsCarousel } from "@/components/skills-carousel"
 import { ProjectCarousel } from "@/components/project-carousel"
 import { MobileNav } from "@/components/mobile-nav"
 import LogoLoop from "@/components/logo-loop"
-import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiPostgresql, SiSupabase, SiN8N, SiJavascript, SiHtml5, SiCss3, SiGit, SiMysql, SiDocker, SiNginx, SiCloudflare } from 'react-icons/si';
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiPostgresql, SiSupabase, SiN8N, SiJavascript, SiHtml5, SiCss, SiGit, SiMysql, SiDocker, SiNginx, SiCloudflare } from 'react-icons/si';
 import { toast, Toaster } from "sonner"
 import {
   Dialog,
@@ -37,7 +37,7 @@ const techLogos = [
   { node: <SiN8N />, title: "n8n", href: "https://n8n.io" },
   { node: <SiJavascript />, title: "JavaScript", href: "https://javascript.info" },
   { node: <SiHtml5 />, title: "HTML5", href: "https://developer.mozilla.org/en-US/docs/Web/HTML" },
-  { node: <SiCss3 />, title: "CSS3", href: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
+  { node: <SiCss />, title: "CSS3", href: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
   { node: <SiGit />, title: "Git", href: "https://git-scm.com" },
   { node: <SiMysql />, title: "MySQL", href: "https://www.mysql.com" },
   { node: <SiDocker />, title: "Docker", href: "https://www.docker.com" },
