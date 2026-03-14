@@ -281,15 +281,28 @@ interface Certificate {
   isGroup?: boolean;
   url?: string;
   courses?: Course[];
+  logo?: string;
+  bgColor?: string;
+  logoPadding?: string;
 }
 
 const certificates: Certificate[] = [
-  { title: "Engenharia de Software", institution: "Uninter (Em andamento)", date: "2025" },
+  {
+    title: "Engenharia de Software",
+    institution: "Uninter (Em andamento)",
+    date: "2025",
+    logo: "/uninter.png",
+    bgColor: "#ffffff",
+    logoPadding: "p-4"
+  },
   {
     title: "Formações Alura",
     institution: "Alura",
     date: "2022 - 2024",
     isGroup: true,
+    logo: "/alura.png",
+    bgColor: "#ffffff",
+    logoPadding: "p-1.5",
     courses: [
       { name: "Técnicas Computacionais: IA na Escola", url: "https://cursos.alura.com.br/certificate/015e1b04-d64e-4522-b48f-ea2ad9d33fa5?lang" },
       { name: "Segurança Digital: Senhas Seguras", url: "https://cursos.alura.com.br/certificate/f6cdd565-a823-49a3-a206-8e6966aaaa98?lang" },
@@ -310,8 +323,26 @@ const certificates: Certificate[] = [
       { name: "Agrinho: Pense, crie e participe", url: "https://cursos.alura.com.br/certificate/345fcffd-32ab-4681-95a6-0f4047079b20?lang" }
     ]
   },
-  { title: "Jornada Python", institution: "Hashtag Treinamentos", date: "8h" },
+  {
+    title: "Jornada Python",
+    institution: "Hashtag Treinamentos",
+    date: "8h",
+    url: "/images/Validação Certificado.pdf",
+    logo: "/hashtag.png",
+    bgColor: "#ffffff",
+    logoPadding: "p-2"
+  },
+  {
+    title: "Excel Básico",
+    institution: "Fundação Bradesco",
+    date: "2024",
+    url: "/images/Escola Virtual - Fundação Bradesco.pdf",
+    logo: "/bradesco.png",
+    bgColor: "#cc092f",
+    logoPadding: "p-0"
+  }
 ]
+
 
 const projects = [
   {
@@ -987,8 +1018,17 @@ export default function Portfolio() {
                             <Card className="glass-card group-hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5 hover:border-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
                               <CardContent className="p-8 flex flex-col h-full gap-4">
                                 <div className="flex justify-between items-start">
-                                  <div className="p-4 rounded-2xl bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors shadow-inner">
-                                    <GraduationCap className="h-6 w-6 text-primary" />
+                                  <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
+                                    {cert.logo ? (
+                                      <img
+                                        src={cert.logo}
+                                        alt={cert.institution}
+                                        className="w-full h-full object-contain"
+                                        referrerPolicy="no-referrer"
+                                      />
+                                    ) : (
+                                      <GraduationCap className="h-6 w-6 text-primary" />
+                                    )}
                                   </div>
                                   <Badge variant="secondary" className="bg-primary/20 text-primary border-none text-[10px] font-bold">
                                     {cert.courses?.length} Cursos
@@ -1014,8 +1054,17 @@ export default function Portfolio() {
                         <Card className="glass-card group-hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5 hover:border-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
                           <CardContent className="p-8 flex flex-col h-full gap-4">
                             <div className="flex justify-between items-start">
-                              <div className="p-4 rounded-2xl bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors shadow-inner">
-                                <Award className="h-6 w-6 text-primary" />
+                              <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
+                                {cert.logo ? (
+                                  <img
+                                    src={cert.logo}
+                                    alt={cert.institution}
+                                    className="w-full h-full object-contain"
+                                    referrerPolicy="no-referrer"
+                                  />
+                                ) : (
+                                  <Award className="h-6 w-6 text-primary" />
+                                )}
                               </div>
                               <ExternalLink className="h-4 w-4 text-muted-foreground/30 group-hover:text-primary transition-colors" />
                             </div>
@@ -1032,8 +1081,17 @@ export default function Portfolio() {
                     ) : (
                       <Card className="glass-card hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5">
                         <CardContent className="p-8 flex flex-col h-full gap-4">
-                          <div className="p-4 rounded-2xl bg-primary/10 w-fit transition-colors shadow-inner">
-                            <Award className="h-6 w-6 text-primary" />
+                          <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
+                            {cert.logo ? (
+                              <img
+                                src={cert.logo}
+                                alt={cert.institution}
+                                className="w-full h-full object-contain"
+                                referrerPolicy="no-referrer"
+                              />
+                            ) : (
+                              <Award className="h-6 w-6 text-primary" />
+                            )}
                           </div>
                           <div>
                             <h3 className="font-black text-lg tracking-tight leading-tight mb-2">{cert.title}</h3>
