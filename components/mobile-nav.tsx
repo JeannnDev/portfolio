@@ -47,8 +47,8 @@ export function MobileNav() {
     }
 
     return (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md md:hidden">
-            <nav className="glass py-3 px-4 rounded-[2rem] shadow-2xl flex items-center justify-between gap-1 border border-white/10">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-md md:hidden">
+            <nav className="glass py-3 px-4 rounded-[2rem] shadow-2xl flex items-center justify-between gap-1 border border-primary/20">
                 {navItems.map((item) => {
                     const Icon = item.icon
                     const isActive = activeSection === item.id
