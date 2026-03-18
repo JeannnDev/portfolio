@@ -3,290 +3,192 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
+import { Terminal, ShieldCheck, Cpu, Database, Fingerprint } from "lucide-react"
 
 export function LoadingScreen() {
-    const [progress, setProgress] = useState(0)
+    const [statusIndex, setStatusIndex] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
-    const [canClose, setCanClose] = useState(false)
+    const [percent, setPercent] = useState(0)
+
+    const statuses = [
+        { text: "INICIANDO SISTEMA...", icon: <Cpu className="h-4 w-4" /> },
+        { text: "ESTABELECENDO CONEXÃO SEGURA...", icon: <ShieldCheck className="h-4 w-4" /> },
+        { text: "CARREGANDO MÓDULOS ADVPL...", icon: <Terminal className="h-4 w-4" /> },
+        { text: "SINCRONIZANDO BANCO DE DADOS...", icon: <Database className="h-4 w-4" /> },
+        { text: "VERIFICANDO IDENTIDADE...", icon: <Fingerprint className="h-4 w-4" /> },
+        { text: "ACESSO CONCEDIDO: BEM-VINDO JEAN CORREA", icon: <ShieldCheck className="h-4 w-4" /> },
+    ]
 
     useEffect(() => {
-        // Ensure minimum 3 seconds display time
-        const minDisplayTimer = setTimeout(() => {
-            setCanClose(true)
-        }, 3000)
+        const totalDuration = 4500 // 4.5 seconds
+        const stepTime = totalDuration / statuses.length
 
-        // Simulate loading progress
-        const interval = setInterval(() => {
-            setProgress((prev) => {
-                if (prev >= 100) {
-                    clearInterval(interval)
-                    if (canClose) {
-                        setTimeout(() => setIsLoading(false), 300)
-                    }
+        // Animate Percent
+        const percentInterval = setInterval(() => {
+            setPercent((p) => {
+                if (p >= 100) {
+                    clearInterval(percentInterval)
                     return 100
                 }
-                // Smooth acceleration curve
-                const increment = prev < 50 ? 1.5 : prev < 80 ? 3 : prev < 95 ? 8 : 15
-                return Math.min(prev + increment, 100)
+                return p + 1
             })
-        }, 40)
+        }, totalDuration / 100)
+
+        // Animate Statuses
+        const statusInterval = setInterval(() => {
+            setStatusIndex((prev) => {
+                if (prev >= statuses.length - 1) {
+                    clearInterval(statusInterval)
+                    setTimeout(() => setIsLoading(false), 800)
+                    return prev
+                }
+                return prev + 1
+            })
+        }, stepTime)
 
         return () => {
-            clearInterval(interval)
-            clearTimeout(minDisplayTimer)
+            clearInterval(percentInterval)
+            clearInterval(statusInterval)
         }
-    }, [canClose])
-
-    // Close when both conditions are met
-    useEffect(() => {
-        if (progress >= 100 && canClose) {
-            setTimeout(() => setIsLoading(false), 300)
-        }
-    }, [progress, canClose])
+    }, [])
 
     return (
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
             {isLoading && (
                 <motion.div
                     initial={{ opacity: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
-                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-background overflow-hidden"
+                    exit={{
+                        opacity: 0,
+                        scale: 1.1,
+                        filter: "blur(20px)"
+                    }}
+                    transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#05070a] overflow-hidden"
                 >
-                    {/* Enhanced animated background */}
-                    <div className="absolute inset-0 overflow-hidden">
-                        {/* Main gradient orb */}
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.3, 0.5, 0.3],
-                            }}
-                            transition={{
-                                duration: 4,
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                            }}
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-primary/30 via-blue-400/20 to-cyan-400/10 rounded-full blur-[100px]"
-                        />
+                    {/* Futuristic Background */}
+                    <div className="absolute inset-0">
+                        {/* Scanning Lines */}
+                        <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,rgba(56,189,248,0.05)_50%,transparent_100%)] bg-[length:100%_4px] animate-scanline pointer-events-none" />
 
-                        {/* Secondary gradient orb */}
-                        <motion.div
-                            animate={{
-                                scale: [1.2, 1, 1.2],
-                                opacity: [0.2, 0.4, 0.2],
-                            }}
-                            transition={{
-                                duration: 5,
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                                delay: 0.5,
-                            }}
-                            className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-gradient-to-bl from-cyan-400/20 via-primary/15 to-transparent rounded-full blur-[80px]"
-                        />
+                        {/* Atmospheric Glow */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.1)_0%,transparent_70%)]" />
 
-                        {/* Floating particles */}
-                        {[...Array(8)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                animate={{
-                                    y: [0, -30, 0],
-                                    x: [0, Math.sin(i) * 20, 0],
-                                    opacity: [0.1, 0.3, 0.1],
-                                }}
-                                transition={{
-                                    duration: 3 + i * 0.5,
-                                    repeat: Infinity,
-                                    ease: "easeInOut",
-                                    delay: i * 0.2,
-                                }}
-                                className="absolute w-1 h-1 bg-primary/40 rounded-full"
-                                style={{
-                                    left: `${20 + i * 10}%`,
-                                    top: `${30 + (i % 3) * 20}%`,
-                                }}
-                            />
-                        ))}
+                        {/* Moving Data Bits (Slight Matrix Feel) */}
+                        <div className="absolute inset-0 opacity-[0.03] select-none pointer-events-none overflow-hidden font-mono text-[10px] leading-none whitespace-pre break-all p-4">
+                            {Array.from({ length: 20 }).map((_, i) => (
+                                <div key={i} className="mb-2">
+                                    {Math.random().toString(16).repeat(10)}
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
-                    {/* Content */}
-                    <div className="relative z-10 flex flex-col items-center gap-14 px-4">
-                        {/* Enhanced Logo with multiple layers */}
-                        <motion.div
-                            initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
-                            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                            transition={{
-                                duration: 0.8,
-                                ease: [0.34, 1.56, 0.64, 1],
-                                delay: 0.1
-                            }}
-                            className="relative"
-                        >
-                            <div className="relative h-28 w-28 sm:h-36 sm:w-36">
-                                {/* Outer glow ring */}
-                                <motion.div
-                                    animate={{
-                                        scale: [1, 1.15, 1],
-                                        opacity: [0.3, 0.6, 0.3],
-                                    }}
-                                    transition={{
-                                        duration: 2.5,
-                                        repeat: Infinity,
-                                        ease: "easeInOut",
-                                    }}
-                                    className="absolute inset-0 bg-gradient-to-tr from-primary/50 to-cyan-400/50 rounded-full blur-3xl"
-                                />
+                    <div className="relative z-10 flex flex-col items-center">
+                        {/* Top Security Emblem / Biometric Circle */}
+                        <div className="relative mb-16">
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                                className="w-40 h-40 rounded-full border border-primary/20 border-t-primary/60 border-l-primary/40 relative"
+                            >
+                                <div className="absolute inset-2 rounded-full border border-white/5" />
+                                <div className="absolute inset-[15%] rounded-full border border-primary/10 border-b-primary/40 animate-spin-reverse" />
+                            </motion.div>
 
-                                {/* Middle glow */}
+                            <div className="absolute inset-0 flex items-center justify-center">
                                 <motion.div
-                                    animate={{
-                                        rotate: [0, 360],
-                                    }}
-                                    transition={{
-                                        duration: 8,
-                                        repeat: Infinity,
-                                        ease: "linear",
-                                    }}
-                                    className="absolute inset-2 bg-gradient-to-tr from-primary/30 via-transparent to-cyan-400/30 rounded-full blur-xl"
-                                />
-
-                                {/* Logo container with enhanced border */}
-                                <motion.div
-                                    animate={{
-                                        boxShadow: [
-                                            "0 0 20px rgba(56, 189, 248, 0.3)",
-                                            "0 0 40px rgba(56, 189, 248, 0.5)",
-                                            "0 0 20px rgba(56, 189, 248, 0.3)",
-                                        ],
-                                    }}
-                                    transition={{
-                                        duration: 2,
-                                        repeat: Infinity,
-                                        ease: "easeInOut",
-                                    }}
-                                    className="relative h-full w-full rounded-full bg-gradient-to-br from-primary/50 to-cyan-400/50 p-[3px]"
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    className="relative w-24 h-24 p-1 rounded-full bg-gradient-to-br from-primary/40 to-black overflow-hidden shadow-[0_0_30px_rgba(56,189,248,0.3)]"
                                 >
-                                    <div className="h-full w-full rounded-full bg-zinc-900 overflow-hidden relative border-2 border-white/20">
+                                    <div className="w-full h-full rounded-full overflow-hidden bg-black relative border border-white/20">
                                         <Image
                                             src="/logo.png"
-                                            alt="Jean Correa Logo"
+                                            alt="JC Logo"
                                             fill
-                                            className="object-cover"
+                                            className="object-cover scale-110"
                                             priority
+                                        />
+                                        {/* Scanning Beam */}
+                                        <motion.div
+                                            animate={{ top: ['-10%', '110%'] }}
+                                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                            className="absolute left-0 right-0 h-1 bg-primary/80 shadow-[0_0_15px_rgba(56,189,248,0.8)] z-20"
                                         />
                                     </div>
                                 </motion.div>
                             </div>
-                        </motion.div>
+                        </div>
 
-                        {/* Enhanced Loading text and progress */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3, duration: 0.6 }}
-                            className="flex flex-col items-center gap-8 w-full max-w-sm"
-                        >
-                            <div className="text-center space-y-3">
-                                <motion.h2
-                                    animate={{
-                                        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                                    }}
-                                    transition={{
-                                        duration: 3,
-                                        repeat: Infinity,
-                                        ease: "linear",
-                                    }}
-                                    className="text-2xl sm:text-3xl font-black tracking-tight bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_auto] bg-clip-text text-transparent"
-                                >
-                                    Carregando Portfolio
-                                </motion.h2>
-                                <p className="text-sm text-muted-foreground/80 font-semibold">
-                                    {progress < 30 && "Inicializando componentes..."}
-                                    {progress >= 30 && progress < 70 && "Carregando recursos..."}
-                                    {progress >= 70 && progress < 100 && "Finalizando..."}
-                                    {progress === 100 && "Pronto!"}
-                                </p>
-                            </div>
-
-                            {/* Enhanced Progress bar */}
-                            <div className="w-full space-y-4">
-                                <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-white/5 border border-white/10 shadow-inner">
-                                    <motion.div
-                                        initial={{ width: 0 }}
-                                        animate={{ width: `${progress}%` }}
-                                        transition={{ duration: 0.3, ease: "easeOut" }}
-                                        className="h-full relative overflow-hidden rounded-full"
-                                    >
-                                        {/* Gradient fill */}
-                                        <div className="absolute inset-0 bg-gradient-to-r from-primary via-blue-400 to-cyan-400" />
-
-                                        {/* Shimmer effect */}
-                                        <motion.div
-                                            animate={{
-                                                x: ["-100%", "200%"],
-                                            }}
-                                            transition={{
-                                                duration: 1.5,
-                                                repeat: Infinity,
-                                                ease: "easeInOut",
-                                            }}
-                                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-                                        />
-
-                                        {/* Glow effect */}
-                                        <div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-cyan-400/50 blur-sm" />
-                                    </motion.div>
-                                </div>
-
-                                {/* Progress info */}
-                                <div className="flex justify-between items-center text-xs font-bold">
-                                    <motion.span
-                                        key={progress}
-                                        initial={{ scale: 1.2 }}
-                                        animate={{ scale: 1 }}
-                                        className="text-muted-foreground tabular-nums"
-                                    >
-                                        {Math.floor(progress)}%
-                                    </motion.span>
-                                    <motion.span
-                                        animate={{
-                                            opacity: progress === 100 ? [1, 0.5, 1] : 1,
-                                        }}
-                                        transition={{
-                                            duration: 0.8,
-                                            repeat: progress === 100 ? Infinity : 0,
-                                        }}
-                                        className={progress === 100 ? "text-green-400" : "text-primary"}
-                                    >
-                                        {progress === 100 ? "✓ Completo" : "Carregando..."}
-                                    </motion.span>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        {/* Enhanced animated dots */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5, duration: 0.5 }}
-                            className="flex gap-2.5"
-                        >
-                            {[0, 1, 2].map((i) => (
+                        {/* Status Messages */}
+                        <div className="w-[320px] sm:w-[500px] h-24 flex flex-col justify-center items-center text-center">
+                            <AnimatePresence mode="wait">
                                 <motion.div
-                                    key={i}
-                                    animate={{
-                                        scale: [1, 1.4, 1],
-                                        opacity: [0.4, 1, 0.4],
-                                    }}
-                                    transition={{
-                                        duration: 1.2,
-                                        repeat: Infinity,
-                                        delay: i * 0.15,
-                                        ease: "easeInOut",
-                                    }}
-                                    className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-primary to-cyan-400 shadow-lg shadow-primary/50"
+                                    key={statusIndex}
+                                    initial={{ opacity: 0, y: 10, filter: "blur(5px)" }}
+                                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                                    exit={{ opacity: 0, y: -10, filter: "blur(5px)" }}
+                                    transition={{ duration: 0.4 }}
+                                    className="flex items-center gap-3"
+                                >
+                                    <span className="p-2 rounded-lg bg-primary/10 text-primary border border-primary/20 shadow-lg shadow-primary/5">
+                                        {statuses[statusIndex].icon}
+                                    </span>
+                                    <span className="text-sm sm:text-base font-black tracking-[0.2em] text-foreground uppercase">
+                                        {statuses[statusIndex].text}
+                                    </span>
+                                </motion.div>
+                            </AnimatePresence>
+
+                            {/* Hex/Terminal Decorative Info (Slightly to the side or bottom) */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 0.4 }}
+                                className="flex gap-4 mt-6 text-[10px] font-mono text-muted-foreground uppercase tracking-widest"
+                            >
+                                <div className="flex items-center gap-1.5 ">
+                                    <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                                    SECURE_MODE: ON
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                    <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                                    KERNAL_V: 1.0.42
+                                </div>
+                            </motion.div>
+                        </div>
+
+                        {/* Progress Container */}
+                        <div className="mt-12 w-[280px] space-y-4">
+                            <div className="flex justify-between items-end mb-1">
+                                <div className="text-[10px] font-black tracking-widest text-primary/60 uppercase">System Integrity</div>
+                                <div className="text-xs font-black tabular-nums text-foreground">{percent}%</div>
+                            </div>
+
+                            <div className="relative h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/10 shadow-inner">
+                                <motion.div
+                                    animate={{ width: `${percent}%` }}
+                                    className="absolute inset-0 bg-gradient-to-r from-primary/40 via-primary to-cyan-400"
                                 />
-                            ))}
-                        </motion.div>
+                                {/* Shimmer */}
+                                <motion.div
+                                    animate={{ left: ['-100%', '100%'] }}
+                                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                                />
+                            </div>
+
+                            {/* Loading Dots */}
+                            <div className="flex justify-center gap-1.5 pt-2">
+                                {[0, 1, 2].map(i => (
+                                    <motion.div
+                                        key={i}
+                                        animate={{ opacity: [0.2, 1, 0.2] }}
+                                        transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+                                        className="h-1 w-1 rounded-full bg-primary"
+                                    />
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </motion.div>
             )}
