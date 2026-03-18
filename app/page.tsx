@@ -812,66 +812,6 @@ export default function Portfolio() {
             </div>
           </section>
 
-<<<<<<< HEAD
-            <div className="flex overflow-x-auto snap-x-mandatory gap-6 -mx-4 px-4 pb-6 md:pb-0 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 scrollbar-hide md:overflow-visible">
-              {certificates.map((cert, index) => (
-                <div key={index} className="flex-none w-[80vw] md:w-auto snap-center">
-                  <AnimatedSection animation="fade-up" delay={index * 100} className="h-full">
-                    {cert.isGroup ? (
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <button className="w-full text-left h-full group outline-none">
-                            <Card className="glass-card group-hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5 hover:border-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
-                              <CardContent className="p-8 flex flex-col h-full gap-4">
-                                <div className="flex justify-between items-start">
-                                  <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
-                                    {cert.logo ? (
-                                      <img
-                                        src={cert.logo}
-                                        alt={cert.institution}
-                                        className="w-full h-full object-contain"
-                                        referrerPolicy="no-referrer"
-                                      />
-                                    ) : (
-                                      <GraduationCap className="h-6 w-6 text-primary" />
-                                    )}
-                                  </div>
-                                  <Badge variant="secondary" className="bg-primary/20 text-primary border-none text-[10px] font-bold">
-                                    {cert.courses?.length} Cursos
-                                  </Badge>
-                                </div>
-                                <div>
-                                  <h3 className="font-black text-lg tracking-tight group-hover:text-primary transition-colors leading-tight mb-2">{cert.title}</h3>
-                                  <p className="text-sm text-muted-foreground/80 font-medium mb-4">{cert.institution}</p>
-                                </div>
-                                <div className="mt-auto">
-                                  <span className="text-[10px] font-black tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full">{cert.date}</span>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[95vw] lg:max-w-[1100px] h-[95dvh] sm:h-[85vh] rounded-[2rem] sm:rounded-[2.5rem] bg-card/95 backdrop-blur-3xl border-white/10 p-0 overflow-hidden shadow-2xl flex flex-col sm:flex-row">
-                          <CourseModalContent cert={cert} />
-                        </DialogContent>
-                      </Dialog>
-                    ) : cert.url ? (
-                      <a href={cert.url} target="_blank" rel="noopener noreferrer" className="block h-full group">
-                        <Card className="glass-card group-hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5 hover:border-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
-                          <CardContent className="p-8 flex flex-col h-full gap-4">
-                            <div className="flex justify-between items-start">
-                              <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
-                                {cert.logo ? (
-                                  <img
-                                    src={cert.logo}
-                                    alt={cert.institution}
-                                    className="w-full h-full object-contain"
-                                    referrerPolicy="no-referrer"
-                                  />
-                                ) : (
-                                  <Award className="h-6 w-6 text-primary" />
-                                )}
-=======
           {/* Skills Section */}
           <section id="skills" className="py-12 md:py-24 lg:py-32 scroll-mt-20 relative">
             {/* Glassy section transition */}
@@ -985,7 +925,6 @@ export default function Portfolio() {
                                   ? "bg-primary border-primary shadow-[0_0_10px_2px] shadow-primary/40"
                                   : "bg-background border-border group-hover:border-primary/50"
                                   }`} />
->>>>>>> 8f67755 (feat: enhance background visuals and fix navigation positioning)
                               </div>
 
                               {/* Role body */}
@@ -1104,8 +1043,17 @@ export default function Portfolio() {
                               <Card className="glass-card group-hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5 hover:border-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
                                 <CardContent className="p-8 flex flex-col h-full gap-4">
                                   <div className="flex justify-between items-start">
-                                    <div className="p-4 rounded-2xl bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors shadow-inner">
-                                      <GraduationCap className="h-6 w-6 text-primary" />
+                                    <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
+                                      {cert.logo ? (
+                                        <img
+                                          src={cert.logo}
+                                          alt={cert.institution}
+                                          className="w-full h-full object-contain"
+                                          referrerPolicy="no-referrer"
+                                        />
+                                      ) : (
+                                        <GraduationCap className="h-6 w-6 text-primary" />
+                                      )}
                                     </div>
                                     <Badge variant="secondary" className="bg-primary/20 text-primary border-none text-[10px] font-bold">
                                       {cert.courses?.length} Cursos
@@ -1131,8 +1079,17 @@ export default function Portfolio() {
                           <Card className="glass-card group-hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5 hover:border-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
                             <CardContent className="p-8 flex flex-col h-full gap-4">
                               <div className="flex justify-between items-start">
-                                <div className="p-4 rounded-2xl bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors shadow-inner">
-                                  <Award className="h-6 w-6 text-primary" />
+                                <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
+                                  {cert.logo ? (
+                                    <img
+                                      src={cert.logo}
+                                      alt={cert.institution}
+                                      className="w-full h-full object-contain"
+                                      referrerPolicy="no-referrer"
+                                    />
+                                  ) : (
+                                    <Award className="h-6 w-6 text-primary" />
+                                  )}
                                 </div>
                                 <ExternalLink className="h-4 w-4 text-muted-foreground/30 group-hover:text-primary transition-colors" />
                               </div>
@@ -1149,52 +1106,46 @@ export default function Portfolio() {
                       ) : (
                         <Card className="glass-card hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5">
                           <CardContent className="p-8 flex flex-col h-full gap-4">
-                            <div className="p-4 rounded-2xl bg-primary/10 w-fit transition-colors shadow-inner">
-                              <Award className="h-6 w-6 text-primary" />
+                            <div className="flex justify-between items-start">
+                              <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
+                                {cert.logo ? (
+                                  <img
+                                    src={cert.logo}
+                                    alt={cert.institution}
+                                    className="w-full h-full object-contain"
+                                    referrerPolicy="no-referrer"
+                                  />
+                                ) : (
+                                  <Award className="h-6 w-6 text-primary" />
+                                )}
+                              </div>
+                              <div className="mt-auto">
+                                <span className="text-[10px] font-black tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full">{cert.date}</span>
+                              </div>
                             </div>
                             <div>
                               <h3 className="font-black text-lg tracking-tight leading-tight mb-2">{cert.title}</h3>
                               <p className="text-sm text-muted-foreground/80 font-medium mb-4">{cert.institution}</p>
                             </div>
-                            <div className="mt-auto">
-                              <span className="text-[10px] font-black tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full">{cert.date}</span>
-                            </div>
                           </CardContent>
                         </Card>
-<<<<<<< HEAD
-                      </a>
-                    ) : (
-                      <Card className="glass-card hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5">
-                        <CardContent className="p-8 flex flex-col h-full gap-4">
-                          <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
-                            {cert.logo ? (
-                              <img
-                                src={cert.logo}
-                                alt={cert.institution}
-                                className="w-full h-full object-contain"
-                                referrerPolicy="no-referrer"
-                              />
-                            ) : (
-                              <Award className="h-6 w-6 text-primary" />
-                            )}
-=======
                       )}
                     </AnimatedSection>
                   </div>
                 ))}
               </div>
             </div>
-          </section >
+          </section>
 
           {/* Contact Section */}
-          <section id="contato" className="py-20 lg:py-32" >
+          <section id="contato" className="py-20 lg:py-32">
             <div className="container mx-auto px-4 lg:px-8">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-2xl mx-auto text-center">
                   <span className="text-primary text-sm font-medium tracking-wider uppercase">Contato</span>
                   <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-4">Vamos Trabalhar Juntos?</h2>
                   <p className="text-muted-foreground mb-8">
-                    Estou sempre aberto para discutir novos projetos, ideias criativas ou oportunidades de fazer parte de suas visoes.
+                    Estou sempre aberto para discutir novos projetos, ideias criativas ou oportunidades de fazer parte de suas visões.
                   </p>
 
                   <AnimatedSection animation="scale" delay={200}>
@@ -1208,7 +1159,6 @@ export default function Portfolio() {
                           <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                           <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
                             {isCopied ? <Check className="h-8 w-8 text-primary animate-in zoom-in" /> : <Mail className="h-8 w-8 text-primary" />}
->>>>>>> 8f67755 (feat: enhance background visuals and fix navigation positioning)
                           </div>
                           <p className="text-lg font-black group-hover:text-primary transition-colors tracking-tight relative z-10">jeannn.dev@gmail.com</p>
                           <div className="flex items-center gap-2 mt-2 relative z-10">
@@ -1240,8 +1190,8 @@ export default function Portfolio() {
                 </div>
               </AnimatedSection>
             </div>
-          </section >
-        </main >
+          </section>
+        </main>
 
         {/* Footer */}
         <footer className="py-8 border-t border-border/50">
