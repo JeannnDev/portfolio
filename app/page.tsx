@@ -26,7 +26,7 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { motion } from "framer-motion"
-import Iridescence from "@/components/Iridescence"
+import PortfolioBackground from "@/components/portfolio-background"
 import { useTheme } from "next-themes"
 
 const techLogos = [
@@ -124,16 +124,31 @@ function CourseModalContent({ cert }: { cert: any }) {
                 rel="noopener noreferrer"
                 className="w-full h-full relative group/screenshot flex border border-white/10 rounded-2xl sm:rounded-[2.5rem] overflow-hidden bg-black/60 shadow-2xl transition-all duration-700 hover:shadow-primary/20 hover:scale-[1.002]"
               >
-                <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 bg-gradient-to-br from-[#051933] to-black z-0">
-                  <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#051933] to-black z-0">
+                  {course.url.toLowerCase().endsWith('.pdf') ? (
+                    <div className="w-full h-full relative p-2 sm:p-4">
+                      {/* Using an iframe to provide a live preview of the PDF */}
+                      <iframe
+                        src={`${course.url}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                        className="w-full h-full rounded-xl sm:rounded-[2rem] border-none pointer-events-none select-none"
+                        title={course.name}
+                      />
+                      {/* Optional overlay to soften the preview look */}
+                      <div className="absolute inset-0 bg-black/5 pointer-events-none" />
+                    </div>
+                  ) : (
+                    <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                  )}
                 </div>
 
-                <img
-                  src={`https://s0.wp.com/mshots/v1/${encodeURIComponent(course.url)}?w=1280`}
-                  alt={`Certificado: ${course.name}`}
-                  className="w-full h-full object-contain relative z-10 opacity-0 transition-opacity duration-1000"
-                  onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
-                />
+                {!(course.url.toLowerCase().endsWith('.pdf')) && (
+                  <img
+                    src={`https://s0.wp.com/mshots/v1/${encodeURIComponent(course.url)}?w=1280`}
+                    alt={`Certificado: ${course.name}`}
+                    className="w-full h-full object-contain relative z-10 opacity-0 transition-opacity duration-1000"
+                    onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
+                  />
+                )}
 
                 <div className="absolute inset-0 border border-white/5 pointer-events-none z-20 rounded-2xl sm:rounded-[2.5rem]"></div>
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/screenshot:opacity-100 transition-opacity duration-300 z-30 flex items-center justify-center">
@@ -327,6 +342,20 @@ const certificates: Certificate[] = [
     ]
   },
   {
+    title: "Terminal da Informação",
+    institution: "Terminal da Informação",
+    date: "2025",
+    isGroup: true,
+    logo: "/TIpremium.png",
+    bgColor: "#000000",
+    logoPadding: "p-0",
+    courses: [
+      { name: "Instalação e Arquitetura do Protheus", url: "/images/Jean Correa Da Silva - Instalação e Arquitetura do Protheus.pdf" },
+      { name: "VSCode com extensão TOTVS", url: "/images/Jean Correa Da Silva - VSCode com extensão TOTVS.pdf" },
+      { name: "WebServices em AdvPL (REST e SOAP)", url: "/images/Jean Correa Da Silva - WebServices em AdvPL (REST e SOAP).pdf" }
+    ]
+  },
+  {
     title: "Jornada Python",
     institution: "Hashtag Treinamentos",
     date: "8h",
@@ -447,7 +476,7 @@ export default function Portfolio() {
   const [mounted, setMounted] = useState(false)
   const [activeSection, setActiveSection] = useState("sobre")
   const [scrolled, setScrolled] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null)
   const [isCopied, setIsCopied] = useState(false)
 
@@ -507,16 +536,13 @@ export default function Portfolio() {
       if (el) observer.observe(el)
     })
 
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-    window.addEventListener("mousemove", handleMouseMove)
+
 
     setMounted(true)
 
     return () => {
       window.removeEventListener("scroll", handleScroll)
-      window.removeEventListener("mousemove", handleMouseMove)
+
       observer.disconnect()
       modalObserver.disconnect()
     }
@@ -546,39 +572,8 @@ export default function Portfolio() {
     <>
       <Toaster position="top-center" richColors />
       <ScrollProgress />
-      <div className="noise-bg opacity-[0.08]" />
-
-      {/* Gradient cursor follower - only on desktop */}
-      <div
-        className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300 hidden lg:block"
-        style={{
-          background: `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(56, 189, 248, 0.08), transparent 45%)`
-        }}
-      />
-
-      {/* Background - Iridescence Animation */}
-      <div className="fixed inset-0 z-0 h-full w-full overflow-hidden bg-background">
-        {mounted && (
-          <div className={`absolute inset-0 transition-opacity duration-1000 ${resolvedTheme === 'dark' ? 'opacity-[0.35]' : 'opacity-[0.2]'}`}>
-            <Iridescence
-              colors={[
-                [0.639, 0.871, 0.98], // #A3DEFA
-                [0.314, 0.557, 0.98], // #508EFA
-                [0.314, 0.765, 0.98], // #50C3FA
-              ]}
-              mouseReact
-              amplitude={0.18}
-              speed={1.0}
-            />
-          </div>
-        )}
-
-        {/* Noise texture for extra premium feel */}
-        <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
-
-        {/* Subtle Vignette Overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,hsl(var(--background)/0.6)_100%)] pointer-events-none" />
-      </div>
+      {/* High-End Professional Background */}
+      <PortfolioBackground />
 
       {/* Header */}
       <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${scrolled
