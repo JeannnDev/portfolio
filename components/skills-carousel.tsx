@@ -35,10 +35,10 @@ export function SkillsCarousel({ skills }: SkillsCarouselProps) {
                 align: "start",
                 loop: true,
             }}
-            plugins={[]}
+            plugins={[plugin.current]}
             className="w-full"
-            onMouseEnter={() => plugin.current.stop()}
-            onMouseLeave={() => plugin.current.play()}
+            onMouseEnter={() => plugin.current?.stop?.()}
+            onMouseLeave={() => plugin.current?.play?.()}
         >
             <CarouselContent className="-ml-2 md:-ml-4">
                 {skills.map((skill, index) => (

@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { Github, ExternalLink, LayoutGrid, Trophy, ArrowRight } from "lucide-react"
+import { Github, ExternalLink, LayoutGrid, Trophy, ArrowRight, X } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -271,7 +271,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
 
             {/* Smart Image Zoom (Lightbox) - Portalled via Dialog */}
             <Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>
-                <DialogContent className="max-w-[100vw] sm:max-w-7xl w-full h-screen sm:h-auto sm:max-h-[95vh] p-0 border-none bg-black/60 sm:bg-transparent shadow-none gap-0 z-[110] outline-none flex items-center justify-center">
+                <DialogContent showCloseButton={false} className="max-w-[100vw] sm:max-w-7xl w-full h-screen sm:h-auto sm:max-h-[95vh] p-0 border-none bg-black/60 sm:bg-transparent shadow-none gap-0 z-[110] outline-none flex items-center justify-center">
                     <DialogTitle className="sr-only">Visualização ampliada da imagem</DialogTitle>
                     <DialogDescription className="sr-only">Mostra a captura de tela do projeto em tela cheia</DialogDescription>
                     <div
@@ -298,7 +298,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                                         setSelectedImage(null);
                                     }}
                                 >
-                                    <ArrowRight className="h-6 w-6 sm:h-5 sm:w-5 rotate-180" />
+                                    <X className="h-6 w-6 sm:h-5 sm:w-5" />
                                 </button>
                             </div>
                         </div>

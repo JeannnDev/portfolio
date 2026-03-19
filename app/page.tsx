@@ -315,7 +315,7 @@ const certificates: Certificate[] = [
   },
   {
     title: "Formações Alura",
-    institution: "Alura",
+    institution: "Alura (Finalizado)",
     date: "2022 - 2024",
     isGroup: true,
     logo: "/alura.png",
@@ -342,8 +342,8 @@ const certificates: Certificate[] = [
     ]
   },
   {
-    title: "Terminal da Informação",
-    institution: "Terminal da Informação",
+    title: "Formações Protheus",
+    institution: "Terminal da Informação (Em andamento)",
     date: "2025",
     isGroup: true,
     logo: "/TIpremium.png",
@@ -357,8 +357,8 @@ const certificates: Certificate[] = [
   },
   {
     title: "Jornada Python",
-    institution: "Hashtag Treinamentos",
-    date: "8h",
+    institution: "Hashtag Treinamentos (Finalizado)",
+    date: "2024",
     url: "/images/Validação Certificado.pdf",
     logo: "/hashtag.png",
     bgColor: "#ffffff",
@@ -366,7 +366,7 @@ const certificates: Certificate[] = [
   },
   {
     title: "Excel Básico",
-    institution: "Fundação Bradesco",
+    institution: "Fundação Bradesco (Finalizado)",
     date: "2024",
     url: "/images/Escola Virtual - Fundação Bradesco.pdf",
     logo: "/bradesco.png",
@@ -576,7 +576,7 @@ export default function Portfolio() {
       <PortfolioBackground />
 
       {/* Header */}
-      <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${scrolled
+      <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isModalOpen ? "-translate-y-full opacity-0 pointer-events-none" : "translate-y-0 opacity-100"} ${scrolled
         ? "py-3 bg-background/60 backdrop-blur-xl border-b border-border/40 shadow-lg"
         : "py-6 bg-transparent"
         }`}>
@@ -1114,13 +1114,13 @@ export default function Portfolio() {
                                   <Award className="h-6 w-6 text-primary" />
                                 )}
                               </div>
-                              <div className="mt-auto">
-                                <span className="text-[10px] font-black tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full">{cert.date}</span>
-                              </div>
                             </div>
                             <div>
                               <h3 className="font-black text-lg tracking-tight leading-tight mb-2">{cert.title}</h3>
                               <p className="text-sm text-muted-foreground/80 font-medium mb-4">{cert.institution}</p>
+                            </div>
+                            <div className="mt-auto">
+                              <span className="text-[10px] font-black tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full">{cert.date}</span>
                             </div>
                           </CardContent>
                         </Card>
