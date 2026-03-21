@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
-import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, ChevronUp, Code2, Database, Server, Terminal, Filter, X, Copy, Check, GraduationCap, FileText, Calendar, Clock } from "lucide-react"
+import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, ChevronUp, Code2, Database, Server, Terminal, Filter, X, Copy, Check, GraduationCap, FileText, Calendar, Clock, Languages } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -222,7 +222,7 @@ const navItems = [
   { id: "projetos", label: "Projetos" },
   { id: "skills", label: "Skills" },
   { id: "experiencia", label: "Experiência" },
-  { id: "certificados", label: "Certificados" },
+  { id: "certificados", label: "Formação" },
   { id: "contato", label: "Contato" },
 ]
 
@@ -306,9 +306,17 @@ interface Certificate {
 
 const certificates: Certificate[] = [
   {
-    title: "Engenharia de Software",
-    institution: "Uninter (Em andamento)",
-    date: "2025",
+    title: "Bacharelado em Engenharia de Software",
+    institution: "UNINTER Centro Universitário Internacional",
+    date: "2025 - o momento",
+    logo: "/uninter.png",
+    bgColor: "#ffffff",
+    logoPadding: "p-4"
+  },
+  {
+    title: "New U-Best - Inglês",
+    institution: "UNINTER Centro Universitário Internacional",
+    date: "2025 - o momento",
     logo: "/uninter.png",
     bgColor: "#ffffff",
     logoPadding: "p-4"
@@ -1019,10 +1027,10 @@ export default function Portfolio() {
             <div className="container mx-auto px-4 lg:px-8">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-2xl mb-12">
-                  <span className="text-primary text-sm font-medium tracking-wider uppercase">Formacao</span>
-                  <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-4">Certificados</h2>
+                  <span className="text-primary text-sm font-medium tracking-wider uppercase">Formacao & Idiomas</span>
+                  <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-4">Carreira Acadêmica</h2>
                   <p className="text-muted-foreground">
-                    Cursos e certificacoes que complementam minha formacao
+                    Certificações, graduação e idiomas
                   </p>
                 </div>
               </AnimatedSection>
@@ -1046,6 +1054,8 @@ export default function Portfolio() {
                                           className="w-full h-full object-contain"
                                           referrerPolicy="no-referrer"
                                         />
+                                      ) : cert.title.toLowerCase().includes('inglês') || cert.title.toLowerCase().includes('idioma') ? (
+                                        <Languages className="h-6 w-6 text-primary" />
                                       ) : (
                                         <GraduationCap className="h-6 w-6 text-primary" />
                                       )}
@@ -1082,6 +1092,8 @@ export default function Portfolio() {
                                       className="w-full h-full object-contain"
                                       referrerPolicy="no-referrer"
                                     />
+                                  ) : cert.title.toLowerCase().includes('inglês') || cert.title.toLowerCase().includes('idioma') ? (
+                                    <Languages className="h-6 w-6 text-primary" />
                                   ) : (
                                     <Award className="h-6 w-6 text-primary" />
                                   )}
@@ -1110,6 +1122,8 @@ export default function Portfolio() {
                                     className="w-full h-full object-contain"
                                     referrerPolicy="no-referrer"
                                   />
+                                ) : cert.title.toLowerCase().includes('inglês') || cert.title.toLowerCase().includes('idioma') ? (
+                                  <Languages className="h-6 w-6 text-primary" />
                                 ) : (
                                   <Award className="h-6 w-6 text-primary" />
                                 )}
