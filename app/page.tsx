@@ -314,9 +314,10 @@ const certificates: Certificate[] = [
     logoPadding: "p-4"
   },
   {
-    title: "New U-Best - Inglês",
-    institution: "UNINTER Centro Universitário Internacional",
-    date: "2025 - o momento",
+    title: "Inglês Básico",
+    institution: "New U-Best, Ensino de Inglês",
+    date: "2025",
+    url: "/images/Ingles%20basic%20Jean.pdf",
     logo: "/uninter.png",
     bgColor: "#ffffff",
     logoPadding: "p-4"
@@ -358,9 +359,9 @@ const certificates: Certificate[] = [
     bgColor: "#000000",
     logoPadding: "p-0",
     courses: [
-      { name: "Instalação e Arquitetura do Protheus", url: "/images/Jean Correa Da Silva - Instalação e Arquitetura do Protheus.pdf" },
-      { name: "VSCode com extensão TOTVS", url: "/images/Jean Correa Da Silva - VSCode com extensão TOTVS.pdf" },
-      { name: "WebServices em AdvPL (REST e SOAP)", url: "/images/Jean Correa Da Silva - WebServices em AdvPL (REST e SOAP).pdf" }
+      { name: "Instalação e Arquitetura do Protheus", url: "/images/Jean%20Correa%20Da%20Silva%20-%20Instalação%20e%20Arquitetura%20do%20Protheus.pdf" },
+      { name: "VSCode com extensão TOTVS", url: "/images/Jean%20Correa%20Da%20Silva%20-%20VSCode%20com%20extensão%20TOTVS.pdf" },
+      { name: "WebServices em AdvPL (REST e SOAP)", url: "/images/Jean%20Correa%20Da%20Silva%20-%20WebServices%20em%20AdvPL%20(REST%20e%20SOAP).pdf" }
     ]
   },
   {
