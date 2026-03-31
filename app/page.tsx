@@ -361,7 +361,9 @@ const certificates: Certificate[] = [
     courses: [
       { name: "Instalação e Arquitetura do Protheus", url: "/images/Jean%20Correa%20Da%20Silva%20-%20Instalação%20e%20Arquitetura%20do%20Protheus.pdf" },
       { name: "VSCode com extensão TOTVS", url: "/images/Jean%20Correa%20Da%20Silva%20-%20VSCode%20com%20extensão%20TOTVS.pdf" },
-      { name: "WebServices em AdvPL (REST e SOAP)", url: "/images/Jean%20Correa%20Da%20Silva%20-%20WebServices%20em%20AdvPL%20(REST%20e%20SOAP).pdf" }
+      { name: "WebServices em AdvPL (REST e SOAP)", url: "/images/Jean%20Correa%20Da%20Silva%20-%20WebServices%20em%20AdvPL%20(REST%20e%20SOAP).pdf" },
+      { name: "WebService REST com tlppCore", url: "/images/Jean%20Correa%20Da%20Silva%20-%20WebService%20REST%20com%20tlppCore%20.pdf" },
+      { name: "Introdução ao Angular", url: "/images/Jean%20Correa%20Da%20Silva%20-%20Introdução%20ao%20Angular.pdf" }
     ]
   },
   {
