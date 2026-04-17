@@ -367,13 +367,17 @@ const certificates: Certificate[] = [
     ]
   },
   {
-    title: "Jornada Python",
+    title: "Formações Hashtag",
     institution: "Hashtag Treinamentos (Finalizado)",
-    date: "2024",
-    url: "/images/Validação Certificado.pdf",
+    date: "2024 - Abril 2026",
+    isGroup: true,
     logo: "/hashtag.png",
     bgColor: "#ffffff",
-    logoPadding: "p-2"
+    logoPadding: "p-2",
+    courses: [
+      { name: "Jornada Python", url: "/images/Validação Certificado.pdf" },
+      { name: "Jornada Power BI", url: "/images/BI.pdf" }
+    ]
   },
   {
     title: "Excel Básico",
