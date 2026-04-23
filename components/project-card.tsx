@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { Github, ExternalLink, LayoutGrid, Trophy, ArrowRight } from "lucide-react"
+import { Github, ExternalLink, LayoutGrid, Trophy, ArrowRight, X } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -18,6 +18,9 @@ import {
     Carousel,
     CarouselContent,
     CarouselItem,
+    CarouselPrevious,
+    CarouselNext,
+    type CarouselApi,
 } from "@/components/ui/carousel"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
@@ -49,7 +52,17 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
     const [open, setOpen] = React.useState(false)
     const [selectedImage, setSelectedImage] = React.useState<string | null>(null)
     const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 })
+    const [api, setApi] = React.useState<CarouselApi>()
+    const [current, setCurrent] = React.useState(0)
     const cardRef = React.useRef<HTMLDivElement>(null)
+
+    React.useEffect(() => {
+        if (!api) return
+        setCurrent(api.selectedScrollSnap())
+        api.on("select", () => {
+            setCurrent(api.selectedScrollSnap())
+        })
+    }, [api])
 
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!cardRef.current) return
@@ -66,7 +79,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                 {/* Imersive Header / Carousel */}
                 <div className="relative w-full overflow-hidden bg-muted group/carousel">
                     {project.images && project.images.length > 0 ? (
-                        <Carousel className="w-full">
+                        <Carousel setApi={setApi} className="w-full">
                             <CarouselContent className="ml-0">
                                 {project.images.map((image, i) => (
                                     <CarouselItem key={i} className="pl-0">
@@ -92,11 +105,19 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                             </CarouselContent>
 
                             {project.images.length > 1 && (
-                                <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-20">
-                                    {project.images.map((_, i) => (
-                                        <div key={i} className="h-1.2 w-1.2 rounded-full bg-white/40 shadow-sm" />
-                                    ))}
-                                </div>
+                                <>
+                                    <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 h-14 w-14 bg-black/60 backdrop-blur-md border-white/10 text-white hover:bg-black/80 hover:scale-110 transition-all pointer-events-auto shadow-2xl z-40" />
+                                    <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 h-14 w-14 bg-black/60 backdrop-blur-md border-white/10 text-white hover:bg-black/80 hover:scale-110 transition-all pointer-events-auto shadow-2xl z-40" />
+                                    <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-30">
+                                        {project.images.map((_, i) => (
+                                            <button
+                                                key={i}
+                                                onClick={() => api?.scrollTo(i)}
+                                                className={`h-1.5 transition-all duration-300 rounded-full shadow-sm ${current === i ? "w-8 bg-primary" : "w-1.5 bg-white/40 hover:bg-white/60"}`}
+                                            />
+                                        ))}
+                                    </div>
+                                </>
                             )}
                         </Carousel>
                     ) : (
@@ -250,7 +271,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
 
             {/* Smart Image Zoom (Lightbox) - Portalled via Dialog */}
             <Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>
-                <DialogContent className="max-w-[100vw] sm:max-w-7xl w-full h-screen sm:h-auto sm:max-h-[95vh] p-0 border-none bg-black/60 sm:bg-transparent shadow-none gap-0 z-[110] outline-none flex items-center justify-center">
+                <DialogContent showCloseButton={false} className="max-w-[100vw] sm:max-w-7xl w-full h-screen sm:h-auto sm:max-h-[95vh] p-0 border-none bg-black/60 sm:bg-transparent shadow-none gap-0 z-[110] outline-none flex items-center justify-center">
                     <DialogTitle className="sr-only">Visualização ampliada da imagem</DialogTitle>
                     <DialogDescription className="sr-only">Mostra a captura de tela do projeto em tela cheia</DialogDescription>
                     <div
@@ -277,7 +298,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                                         setSelectedImage(null);
                                     }}
                                 >
-                                    <ArrowRight className="h-6 w-6 sm:h-5 sm:w-5 rotate-180" />
+                                    <X className="h-6 w-6 sm:h-5 sm:w-5" />
                                 </button>
                             </div>
                         </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
-import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, ChevronUp, Code2, Database, Server, Terminal, Filter, X, Copy, Check, GraduationCap, FileText, Calendar, Clock } from "lucide-react"
+import { Github, Linkedin, Mail, Star, Award, ExternalLink, ChevronRight, ChevronUp, Code2, Database, Server, Terminal, Filter, X, Copy, Check, GraduationCap, FileText, Calendar, Clock, Languages } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -26,7 +26,7 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { motion } from "framer-motion"
-import Iridescence from "@/components/Iridescence"
+import PortfolioBackground from "@/components/portfolio-background"
 import { useTheme } from "next-themes"
 
 const techLogos = [
@@ -124,16 +124,31 @@ function CourseModalContent({ cert }: { cert: any }) {
                 rel="noopener noreferrer"
                 className="w-full h-full relative group/screenshot flex border border-white/10 rounded-2xl sm:rounded-[2.5rem] overflow-hidden bg-black/60 shadow-2xl transition-all duration-700 hover:shadow-primary/20 hover:scale-[1.002]"
               >
-                <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 bg-gradient-to-br from-[#051933] to-black z-0">
-                  <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#051933] to-black z-0">
+                  {course.url.toLowerCase().endsWith('.pdf') ? (
+                    <div className="w-full h-full relative p-2 sm:p-4">
+                      {/* Using an iframe to provide a live preview of the PDF */}
+                      <iframe
+                        src={`${course.url}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                        className="w-full h-full rounded-xl sm:rounded-[2rem] border-none pointer-events-none select-none"
+                        title={course.name}
+                      />
+                      {/* Optional overlay to soften the preview look */}
+                      <div className="absolute inset-0 bg-black/5 pointer-events-none" />
+                    </div>
+                  ) : (
+                    <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                  )}
                 </div>
 
-                <img
-                  src={`https://s0.wp.com/mshots/v1/${encodeURIComponent(course.url)}?w=1280`}
-                  alt={`Certificado: ${course.name}`}
-                  className="w-full h-full object-contain relative z-10 opacity-0 transition-opacity duration-1000"
-                  onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
-                />
+                {!(course.url.toLowerCase().endsWith('.pdf')) && (
+                  <img
+                    src={`https://s0.wp.com/mshots/v1/${encodeURIComponent(course.url)}?w=1280`}
+                    alt={`Certificado: ${course.name}`}
+                    className="w-full h-full object-contain relative z-10 opacity-0 transition-opacity duration-1000"
+                    onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
+                  />
+                )}
 
                 <div className="absolute inset-0 border border-white/5 pointer-events-none z-20 rounded-2xl sm:rounded-[2.5rem]"></div>
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/screenshot:opacity-100 transition-opacity duration-300 z-30 flex items-center justify-center">
@@ -207,7 +222,7 @@ const navItems = [
   { id: "projetos", label: "Projetos" },
   { id: "skills", label: "Skills" },
   { id: "experiencia", label: "Experiência" },
-  { id: "certificados", label: "Certificados" },
+  { id: "certificados", label: "Formação" },
   { id: "contato", label: "Contato" },
 ]
 
@@ -284,15 +299,37 @@ interface Certificate {
   isGroup?: boolean;
   url?: string;
   courses?: Course[];
+  logo?: string;
+  bgColor?: string;
+  logoPadding?: string;
 }
 
 const certificates: Certificate[] = [
-  { title: "Engenharia de Software", institution: "Uninter (Em andamento)", date: "2025" },
+  {
+    title: "Bacharelado em Engenharia de Software",
+    institution: "UNINTER Centro Universitário Internacional",
+    date: "2025 - o momento",
+    logo: "/uninter.png",
+    bgColor: "#ffffff",
+    logoPadding: "p-4"
+  },
+  {
+    title: "Inglês Básico",
+    institution: "New U-Best, Ensino de Inglês",
+    date: "2025",
+    url: "/images/Ingles%20basic%20Jean.pdf",
+    logo: "/uninter.png",
+    bgColor: "#ffffff",
+    logoPadding: "p-4"
+  },
   {
     title: "Formações Alura",
-    institution: "Alura",
+    institution: "Alura (Finalizado)",
     date: "2022 - 2024",
     isGroup: true,
+    logo: "/alura.png",
+    bgColor: "#ffffff",
+    logoPadding: "p-1.5",
     courses: [
       { name: "Técnicas Computacionais: IA na Escola", url: "https://cursos.alura.com.br/certificate/015e1b04-d64e-4522-b48f-ea2ad9d33fa5?lang" },
       { name: "Segurança Digital: Senhas Seguras", url: "https://cursos.alura.com.br/certificate/f6cdd565-a823-49a3-a206-8e6966aaaa98?lang" },
@@ -313,10 +350,54 @@ const certificates: Certificate[] = [
       { name: "Agrinho: Pense, crie e participe", url: "https://cursos.alura.com.br/certificate/345fcffd-32ab-4681-95a6-0f4047079b20?lang" }
     ]
   },
-  { title: "Jornada Python", institution: "Hashtag Treinamentos", date: "8h" },
+  {
+    title: "Formações Protheus",
+    institution: "Terminal da Informação (Em andamento)",
+    date: "2025",
+    isGroup: true,
+    logo: "/TIpremium.png",
+    bgColor: "#000000",
+    logoPadding: "p-0",
+    courses: [
+      { name: "Instalação e Arquitetura do Protheus", url: "/images/Jean%20Correa%20Da%20Silva%20-%20Instalação%20e%20Arquitetura%20do%20Protheus.pdf" },
+      { name: "VSCode com extensão TOTVS", url: "/images/Jean%20Correa%20Da%20Silva%20-%20VSCode%20com%20extensão%20TOTVS.pdf" },
+      { name: "WebServices em AdvPL (REST e SOAP)", url: "/images/Jean%20Correa%20Da%20Silva%20-%20WebServices%20em%20AdvPL%20(REST%20e%20SOAP).pdf" },
+      { name: "WebService REST com tlppCore", url: "/images/Jean%20Correa%20Da%20Silva%20-%20WebService%20REST%20com%20tlppCore%20.pdf" },
+      { name: "Introdução ao Angular", url: "/images/Jean%20Correa%20Da%20Silva%20-%20Introdução%20ao%20Angular.pdf" }
+    ]
+  },
+  {
+    title: "Formações Hashtag",
+    institution: "Hashtag Treinamentos (Finalizado)",
+    date: "2024 - Abril 2026",
+    isGroup: true,
+    logo: "/hashtag.png",
+    bgColor: "#ffffff",
+    logoPadding: "p-2",
+    courses: [
+      { name: "Jornada Python", url: "/images/Validação Certificado.pdf" },
+      { name: "Jornada Power BI", url: "/images/BI.pdf" }
+    ]
+  },
+  {
+    title: "Excel Básico",
+    institution: "Fundação Bradesco (Finalizado)",
+    date: "2024",
+    url: "/images/Escola Virtual - Fundação Bradesco.pdf",
+    logo: "/bradesco.png",
+    bgColor: "#cc092f",
+    logoPadding: "p-0"
+  }
 ]
 
 const projects = [
+  {
+    title: "ERP Delta — Angular + PO UI",
+    description: "Plataforma modular de alta performance desenvolvida para modernizar a interação com o Protheus (TOTVS). Centraliza múltiplos módulos — Apontamento de Produção, Importação Inteligente de Pedidos (SheetJS), Auditoria de Documentos e Gestão de Fornecedores — em uma única SPA Angular 21 com Signals, Standalone Components e PO UI. Integração via REST com WebServices ADVPL customizados, garantindo performance e segurança no ambiente REST do Protheus.",
+    images: ["/images/apontamento_erp1.png", "/images/apontamento_erp2.png", "/images/apontamento_erp3.png", "/images/apontamento_erp4.png", "/images/apontamento_erp5.png", "/images/apontamento_erp6.png", "/images/apontamento_erp7.png", "/images/apontamento_erp8.png", "/images/apontamento_erp9.png"],
+    tags: ["Angular", "ADVPL", "TOTVS Protheus", "TypeScript"],
+    github: "#",
+  },
   {
     title: "Módulo de Solicitação de Compras",
     description: "Sistema de criação de SCs com motor de validação inteligente que previne erros de classificação contábil. Interface master-detail para múltiplos itens, validação cruzada entre tipos de material/centros de custo/naturezas, e integração bidirecional com TOTVS Protheus (ADVPL/SC1).",
@@ -333,7 +414,7 @@ const projects = [
   },
   {
     title: "Controle de Produção Industrial (Shop Floor)",
-    description: "Sistema web para apontamento de produção em chão de fábrica com integração ERP TOTVS Protheus (ADVPL). Controle de OPs, perdas, setup de máquinas e impressão térmica de etiquetas ZPL. Interface otimizada para tablets industriais com validações robustas e sincronização em tempo real.",
+    description: "Sistema web para apontamento de produção em chão de fábrica com integração ERP TOTVS Protheus (ADVPL). Controle de OPs, perdas, setup de máquinas e impressão térmica de etiquetas ZPL. Interface otimizada para tablets industriais with validações robustas e sincronização em tempo real.",
     images: ["/images/shopfloor1.png", "/images/shopfloor2.png", "/images/shopfloor3.png", "/images/shopfloor4.png", "/images/shopfloor5.png", "/images/shopfloor6.png"],
     tags: ["Next.js", "ADVPL", "TOTVS Protheus", "TypeScript"],
     github: "#",
@@ -381,8 +462,8 @@ const projects = [
     github: "#",
   },
   {
-    title: "Migração SQL Server → PostgreSQL",
-    description: "Automação ETL com n8n para migração massiva de dados (Produtos, Clientes, Financeiro) entre bancos diferentes.",
+    title: "Migração SQL Server \u2192 PostgreSQL",
+    description: "Automação ETL with n8n para migração massiva de dados (Produtos, Clientes, Financeiro) entre bancos diferentes.",
     images: [],
     tags: ["PostgreSQL", "Automation"],
     github: "#",
@@ -392,33 +473,18 @@ const projects = [
 const stats = [
   { value: "2+", label: "Anos de Experiência" },
   { value: "876h+", label: "Horas de aprendizado" },
-  { value: "8+", label: "Projetos Reais" },
+  { value: "11+", label: "Projetos Reais" },
   { value: "15+", label: "Tecnologias" },
 ]
-
-function StarRating({ level }: { level: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <Star
-          key={star}
-          className={`h-3 w-3 ${star <= level ? "fill-primary text-primary" : "text-muted-foreground/30"}`}
-        />
-      ))}
-    </div>
-  )
-}
-
-// Local ProjectCard removed as it's replaced by @/components/project-card.tsx
 
 export default function Portfolio() {
   const { theme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [activeSection, setActiveSection] = useState("sobre")
   const [scrolled, setScrolled] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null)
   const [isCopied, setIsCopied] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const typingWords = ["FullStack", "Backend", "Automação", "APIs REST", "Integrações"]
   const typedText = useTypingEffect(typingWords, 150, 100, 2000)
@@ -435,14 +501,11 @@ export default function Portfolio() {
     setTimeout(() => setIsCopied(false), 2000)
   }
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
   useEffect(() => {
-    // Scroll state for header blur
+    setMounted(true)
     const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener("scroll", handleScroll)
 
-    // Detect if any modal is open (Radix UI adds style/attributes to body)
     const modalObserver = new MutationObserver(() => {
       const isLocked = document.body.style.pointerEvents === 'none' ||
         document.body.hasAttribute('data-scroll-locked') ||
@@ -457,10 +520,9 @@ export default function Portfolio() {
       attributeFilter: ['style', 'data-scroll-locked']
     })
 
-    // IntersectionObserver for reliable active-section detection
     const observerOptions: IntersectionObserverInit = {
       root: null,
-      rootMargin: "-30% 0px -60% 0px", // trigger when section is in the upper 40% of viewport
+      rootMargin: "-30% 0px -60% 0px",
       threshold: 0,
     }
     const observer = new IntersectionObserver((entries) => {
@@ -476,16 +538,8 @@ export default function Portfolio() {
       if (el) observer.observe(el)
     })
 
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-    window.addEventListener("mousemove", handleMouseMove)
-
-    setMounted(true)
-
     return () => {
       window.removeEventListener("scroll", handleScroll)
-      window.removeEventListener("mousemove", handleMouseMove)
       observer.disconnect()
       modalObserver.disconnect()
     }
@@ -499,58 +553,22 @@ export default function Portfolio() {
     }
   }
 
+  const mainStacks = ["Next.js", "TypeScript", "Python", "Angular", "ADVPL", "TOTVS Protheus", "PostgreSQL", "Supabase", "Docker", "Nginx", "Cloudflare"]
 
-  // Main stacks that people look for in a dev
-  const mainStacks = ["Next.js", "TypeScript", "Python", "ADVPL", "TOTVS Protheus", "PostgreSQL", "Supabase", "Docker", "Nginx", "Cloudflare"]
-
-  // Filter projects by selected tag
   const filteredProjects = selectedFilter
     ? projects.filter(project => project.tags.includes(selectedFilter))
     : projects
 
-  // Use main stacks for the filter options
   const allTags = mainStacks
 
   return (
     <>
       <Toaster position="top-center" richColors />
       <ScrollProgress />
-      <div className="noise-bg opacity-[0.08]" />
+      
+      <PortfolioBackground />
 
-      {/* Gradient cursor follower - only on desktop */}
-      <div
-        className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300 hidden lg:block"
-        style={{
-          background: `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(56, 189, 248, 0.08), transparent 45%)`
-        }}
-      />
-
-      {/* Background - Iridescence Animation */}
-      <div className="fixed inset-0 z-0 h-full w-full overflow-hidden bg-background">
-        {mounted && (
-          <div className={`absolute inset-0 transition-opacity duration-1000 ${resolvedTheme === 'dark' ? 'opacity-[0.35]' : 'opacity-[0.2]'}`}>
-            <Iridescence
-              colors={[
-                [0.639, 0.871, 0.98], // #A3DEFA
-                [0.314, 0.557, 0.98], // #508EFA
-                [0.314, 0.765, 0.98], // #50C3FA
-              ]}
-              mouseReact
-              amplitude={0.18}
-              speed={1.0}
-            />
-          </div>
-        )}
-
-        {/* Noise texture for extra premium feel */}
-        <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
-
-        {/* Subtle Vignette Overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,hsl(var(--background)/0.6)_100%)] pointer-events-none" />
-      </div>
-
-      {/* Header */}
-      <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${scrolled
+      <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isModalOpen ? "-translate-y-full opacity-0 pointer-events-none" : "translate-y-0 opacity-100"} ${scrolled
         ? "py-3 bg-background/60 backdrop-blur-xl border-b border-border/40 shadow-lg"
         : "py-6 bg-transparent"
         }`}>
@@ -574,7 +592,6 @@ export default function Portfolio() {
               </div>
             </button>
 
-            {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-1 p-1 rounded-full bg-muted/20 backdrop-blur-md border border-white/5">
               {navItems.map((item) => (
                 <button
@@ -597,7 +614,6 @@ export default function Portfolio() {
               <ThemeToggle />
             </nav>
 
-            {/* Mobile Header Actions */}
             <div className="md:hidden flex items-center gap-2">
               <ThemeToggle />
             </div>
@@ -611,16 +627,12 @@ export default function Portfolio() {
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className="relative"
       >
-
         <main className="relative z-10">
           {/* Hero Section */}
           <section id="sobre" className="min-h-[100svh] flex items-center pt-24 pb-12 lg:pt-0">
             <div className="container mx-auto px-4 lg:px-12">
               <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-                {/* Left Column - Text */}
                 <div className="order-2 lg:order-1 text-center lg:text-left">
-                  {/* Hero Badge Removed */}
-
                   <h1 className="text-6xl sm:text-7xl lg:text-9xl font-black mb-8 leading-[0.9] tracking-tight drop-shadow-sm">
                     Software<br className="hidden sm:block" />
                     <span className="text-gradient inline-block min-w-[200px] drop-shadow-[0_0_30px_rgba(56,189,248,0.3)]">
@@ -632,7 +644,6 @@ export default function Portfolio() {
                     Graduando em <span className="text-foreground font-bold underline decoration-primary/30 underline-offset-8">Engenharia de Software</span>. Especialista em arquiteturas <span className="text-foreground font-bold">FullStack</span>, automações de alto impacto e integrações nativas com <span className="text-foreground font-bold italic">TOTVS Protheus (ADVPL)</span>.
                   </p>
 
-                  {/* Stats - Unified Glass Container */}
                   <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-y-8 mb-10 p-6 sm:p-8 rounded-[2.5rem] bg-card/20 backdrop-blur-2xl border border-white/10 shadow-2xl relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                     <div className="absolute -inset-[100%] bg-[conic-gradient(from_0deg,transparent,rgba(56,189,248,0.1),transparent_40%)] animate-[spin_20s_linear_infinite] pointer-events-none opacity-30" />
@@ -647,8 +658,6 @@ export default function Portfolio() {
                             {stat.label}
                           </div>
                         </div>
-
-                        {/* Vertical Divider for Desktop */}
                         {index < stats.length - 1 && (
                           <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 w-px h-12 bg-white/5" />
                         )}
@@ -668,7 +677,6 @@ export default function Portfolio() {
                   </div>
                 </div>
 
-                {/* Right Column - Visual (Professional Photo Container) */}
                 <div className="order-1 lg:order-2 flex justify-center lg:justify-end relative">
                   <div className="relative w-full max-w-[320px] sm:max-w-[400px] aspect-[4/5] animate-in fade-in zoom-in duration-1000 mt-8 lg:mt-0">
                     <div className="absolute inset-0 rounded-[3rem] overflow-hidden isolation-isolate shadow-2xl flex flex-col items-center justify-end">
@@ -688,7 +696,6 @@ export default function Portfolio() {
                         />
                       </div>
 
-                      {/* Floating Info Bottom - Stable and elegant */}
                       <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 rounded-2xl bg-background/50 backdrop-blur-xl border-none shadow-2xl gap-4 sm:gap-0">
                         <div className="text-left">
                           <h3 className="text-lg sm:text-xl font-black text-foreground leading-tight">Jean Correa</h3>
@@ -720,26 +727,20 @@ export default function Portfolio() {
           </section>
 
           {/* Projects Section */}
-          < section id="projetos" className="py-12 md:py-24 lg:py-32 scroll-mt-20" >
+          <section id="projetos" className="py-12 md:py-24 lg:py-32 scroll-mt-20">
             <div className="container mx-auto px-4 lg:px-8">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-2xl mb-8">
                   <span className="text-primary text-sm font-medium tracking-wider uppercase">Portfolio</span>
                   <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-4">Projetos em Destaque</h2>
                   <p className="text-muted-foreground">
-                    Uma selecao dos meus trabalhos mais recentes e relevantes
+                    Uma seleção dos meus trabalhos mais recentes e relevantes
                   </p>
                 </div>
               </AnimatedSection>
 
-              {/* Filter Tags */}
-              {/* Filter Tags - Modern Scrollable Bar */}
               <AnimatedSection animation="fade-up" delay={100}>
                 <div className="relative mb-10 group">
-                  {/* Mobile Gradient Fades */}
-                  <div className="absolute left-0 top-0 bottom-2 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none md:hidden" />
-                  <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none md:hidden" />
-
                   <div className="flex overflow-x-auto pb-4 gap-2 scrollbar-hide -mx-4 px-4 md:flex-wrap md:justify-center md:mx-0 md:px-0 md:overflow-visible">
                     <button
                       onClick={() => setSelectedFilter(null)}
@@ -760,15 +761,12 @@ export default function Portfolio() {
                           }`}
                       >
                         {tag}
-                        {/* {selectedFilter === tag && <Check className="h-3 w-3" />} */}
                       </button>
                     ))}
                   </div>
                 </div>
               </AnimatedSection>
 
-              {/* Projects Container - Horizontal Scroll on Mobile, Grid on Desktop */}
-              {/* Projects Carousel */}
               <div className="w-full">
                 {filteredProjects.length > 0 ? (
                   <ProjectCarousel filteredProjects={filteredProjects} />
@@ -783,13 +781,12 @@ export default function Portfolio() {
 
           {/* Skills Section */}
           <section id="skills" className="py-12 md:py-24 lg:py-32 scroll-mt-20 relative">
-            {/* Glassy section transition */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
             <div className="container mx-auto px-4 lg:px-8">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-2xl mb-12 text-center mx-auto">
                   <span className="text-primary text-sm font-medium tracking-wider uppercase">Habilidades</span>
-                  <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-4">Stack Tecnologico</h2>
+                  <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-4">Stack Tecnológico</h2>
                   <p className="text-muted-foreground">
                     Tecnologias e ferramentas que domino e utilizo no dia a dia
                   </p>
@@ -798,9 +795,7 @@ export default function Portfolio() {
 
               <AnimatedSection animation="fade-up" delay={200}>
                 <div className="relative">
-                  {/* Decorative gradient */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent blur-3xl" />
-
                   <div className="py-8">
                     <LogoLoop
                       logos={techLogos}
@@ -814,12 +809,10 @@ export default function Portfolio() {
                       ariaLabel="Tecnologias"
                     />
                   </div>
-
                   <SkillsCarousel skills={skills} />
                 </div>
               </AnimatedSection>
 
-              {/* Category Legend */}
               <AnimatedSection animation="fade-up" delay={400}>
                 <div className="flex flex-wrap justify-center gap-3 mt-12">
                   <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 border border-border/50">
@@ -858,8 +851,6 @@ export default function Portfolio() {
                 {experiences.map((exp, ei) => (
                   <AnimatedSection key={ei} animation="fade-up" delay={ei * 80}>
                     <div className="flex gap-5">
-
-                      {/* LEFT — logo anchored to a vertical line */}
                       <div className="flex flex-col items-center shrink-0">
                         <div className="relative group/logo">
                           <div className="absolute -inset-2 bg-primary/20 rounded-2xl blur-lg opacity-0 group-hover/logo:opacity-100 transition-opacity duration-500" />
@@ -867,14 +858,10 @@ export default function Portfolio() {
                             <Image src={exp.companyLogo} alt={exp.company} width={54} height={54} className="w-full h-full object-contain" />
                           </div>
                         </div>
-                        {/* Vertical line flowing down through all roles */}
                         <div className="flex-1 w-px mt-4 bg-gradient-to-b from-primary/60 via-primary/10 to-transparent" />
                       </div>
 
-                      {/* RIGHT — company info + nested roles */}
                       <div className="flex-1 min-w-0 pb-4">
-
-                        {/* Company header */}
                         <div className="flex items-start justify-between gap-3 mb-7 pt-1.5">
                           <div>
                             <h3 className="text-base font-black text-foreground tracking-tight">{exp.company}</h3>
@@ -883,12 +870,9 @@ export default function Portfolio() {
                           </div>
                         </div>
 
-                        {/* Roles */}
                         <div className="flex flex-col gap-7">
                           {exp.roles.map((role, ri) => (
                             <div key={ri} className="flex gap-4 group">
-
-                              {/* Dot sitting exactly on the vertical line */}
                               <div className="shrink-0 -ml-[31px] mt-1">
                                 <div className={`w-3 h-3 rounded-full border-2 transition-all duration-300 group-hover:scale-125 ${role.current
                                   ? "bg-primary border-primary shadow-[0_0_10px_2px] shadow-primary/40"
@@ -896,7 +880,6 @@ export default function Portfolio() {
                                   }`} />
                               </div>
 
-                              {/* Role body */}
                               <div className="flex-1 min-w-0 group/card relative">
                                 <div className="absolute -inset-4 bg-primary/5 rounded-[2.5rem] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 hidden md:block" />
 
@@ -921,7 +904,7 @@ export default function Portfolio() {
                                           <span className="text-muted-foreground/20">•</span>
                                           <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/40">
                                             <Calendar className="h-3 w-3" />
-                                            {formatExpDate(role.startDate)} – {role.endDate ? formatExpDate(role.endDate) : "o momento"}
+                                            {formatExpDate(role.startDate)} \u2013 {role.endDate ? formatExpDate(role.endDate) : "o momento"}
                                           </div>
                                         </div>
                                       </div>
@@ -937,7 +920,6 @@ export default function Portfolio() {
                                     </div>
 
                                     <div className="space-y-6">
-                                      {/* Period & Type - Visible only on Desktop */}
                                       <div className="hidden lg:block p-5 rounded-[2rem] bg-background/40 backdrop-blur-md border border-white/5 shadow-2xl group-hover/card:border-primary/20 transition-all">
                                         <div className="space-y-4">
                                           <div className="flex items-start gap-4">
@@ -947,7 +929,7 @@ export default function Portfolio() {
                                             <div className="flex flex-col gap-0.5">
                                               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">Período</span>
                                               <p className="text-xs font-black text-foreground tracking-tight">
-                                                {formatExpDate(role.startDate)} – {role.endDate ? formatExpDate(role.endDate) : "o momento"} · {getDuration(role.startDate, role.endDate)}
+                                                {formatExpDate(role.startDate)} \u2013 {role.endDate ? formatExpDate(role.endDate) : "o momento"} \u00b7 {getDuration(role.startDate, role.endDate)}
                                               </p>
                                             </div>
                                           </div>
@@ -986,17 +968,15 @@ export default function Portfolio() {
             </div>
           </section>
 
-
           {/* Certificates Section */}
           <section id="certificados" className="py-12 md:py-24 lg:py-32 scroll-mt-20">
-
             <div className="container mx-auto px-4 lg:px-8">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-2xl mb-12">
                   <span className="text-primary text-sm font-medium tracking-wider uppercase">Formacao</span>
                   <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-4">Certificados</h2>
                   <p className="text-muted-foreground">
-                    Cursos e certificacoes que complementam minha formacao
+                    Cursos e certificações que complementam minha formação
                   </p>
                 </div>
               </AnimatedSection>
@@ -1012,8 +992,19 @@ export default function Portfolio() {
                               <Card className="glass-card group-hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5 hover:border-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
                                 <CardContent className="p-8 flex flex-col h-full gap-4">
                                   <div className="flex justify-between items-start">
-                                    <div className="p-4 rounded-2xl bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors shadow-inner">
-                                      <GraduationCap className="h-6 w-6 text-primary" />
+                                    <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
+                                      {cert.logo ? (
+                                        <img
+                                          src={cert.logo}
+                                          alt={cert.institution}
+                                          className="w-full h-full object-contain"
+                                          referrerPolicy="no-referrer"
+                                        />
+                                      ) : cert.title.toLowerCase().includes('inglês') || cert.title.toLowerCase().includes('idioma') ? (
+                                        <Languages className="h-6 w-6 text-primary" />
+                                      ) : (
+                                        <GraduationCap className="h-6 w-6 text-primary" />
+                                      )}
                                     </div>
                                     <Badge variant="secondary" className="bg-primary/20 text-primary border-none text-[10px] font-bold">
                                       {cert.courses?.length} Cursos
@@ -1039,8 +1030,19 @@ export default function Portfolio() {
                           <Card className="glass-card group-hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5 hover:border-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
                             <CardContent className="p-8 flex flex-col h-full gap-4">
                               <div className="flex justify-between items-start">
-                                <div className="p-4 rounded-2xl bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors shadow-inner">
-                                  <Award className="h-6 w-6 text-primary" />
+                                <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
+                                  {cert.logo ? (
+                                    <img
+                                      src={cert.logo}
+                                      alt={cert.institution}
+                                      className="w-full h-full object-contain"
+                                      referrerPolicy="no-referrer"
+                                    />
+                                  ) : cert.title.toLowerCase().includes('inglês') || cert.title.toLowerCase().includes('idioma') ? (
+                                    <Languages className="h-6 w-6 text-primary" />
+                                  ) : (
+                                    <Award className="h-6 w-6 text-primary" />
+                                  )}
                                 </div>
                                 <ExternalLink className="h-4 w-4 text-muted-foreground/30 group-hover:text-primary transition-colors" />
                               </div>
@@ -1057,8 +1059,21 @@ export default function Portfolio() {
                       ) : (
                         <Card className="glass-card hover:-translate-y-2 rounded-[2rem] overflow-hidden h-full transition-all duration-300 border-white/5">
                           <CardContent className="p-8 flex flex-col h-full gap-4">
-                            <div className="p-4 rounded-2xl bg-primary/10 w-fit transition-colors shadow-inner">
-                              <Award className="h-6 w-6 text-primary" />
+                            <div className="flex justify-between items-start">
+                              <div className={`rounded-2xl shadow-xl ring-1 ring-black/5 w-28 h-16 flex items-center justify-center overflow-hidden transition-all duration-500 relative ${cert.logoPadding || ''}`} style={{ backgroundColor: cert.bgColor || '#ffffff' }}>
+                                {cert.logo ? (
+                                  <img
+                                    src={cert.logo}
+                                    alt={cert.institution}
+                                    className="w-full h-full object-contain"
+                                    referrerPolicy="no-referrer"
+                                  />
+                                ) : cert.title.toLowerCase().includes('inglês') || cert.title.toLowerCase().includes('idioma') ? (
+                                  <Languages className="h-6 w-6 text-primary" />
+                                ) : (
+                                  <Award className="h-6 w-6 text-primary" />
+                                )}
+                              </div>
                             </div>
                             <div>
                               <h3 className="font-black text-lg tracking-tight leading-tight mb-2">{cert.title}</h3>
@@ -1075,17 +1090,17 @@ export default function Portfolio() {
                 ))}
               </div>
             </div>
-          </section >
+          </section>
 
           {/* Contact Section */}
-          <section id="contato" className="py-20 lg:py-32" >
+          <section id="contato" className="py-20 lg:py-32">
             <div className="container mx-auto px-4 lg:px-8">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-2xl mx-auto text-center">
                   <span className="text-primary text-sm font-medium tracking-wider uppercase">Contato</span>
                   <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-4">Vamos Trabalhar Juntos?</h2>
                   <p className="text-muted-foreground mb-8">
-                    Estou sempre aberto para discutir novos projetos, ideias criativas ou oportunidades de fazer parte de suas visoes.
+                    Estou sempre aberto para discutir novos projetos, ideias criativas ou oportunidades de fazer parte de suas visões.
                   </p>
 
                   <AnimatedSection animation="scale" delay={200}>
@@ -1130,8 +1145,8 @@ export default function Portfolio() {
                 </div>
               </AnimatedSection>
             </div>
-          </section >
-        </main >
+          </section>
+        </main>
 
         {/* Footer */}
         <footer className="py-8 border-t border-border/50">
