@@ -233,7 +233,7 @@ const experiences = [
     location: "São José dos Pinhais, Paraná, Brasil · Presencial",
     roles: [
       {
-        title: "Desenvolvedor Full Stack",
+        title: "Desenvolvedor de Sistemas Jr",
         type: "Tempo integral",
         startDate: new Date(2025, 6), // Julho 2025
         endDate: null,
@@ -565,7 +565,7 @@ export default function Portfolio() {
     <>
       <Toaster position="top-center" richColors />
       <ScrollProgress />
-      
+
       <PortfolioBackground />
 
       <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isModalOpen ? "-translate-y-full opacity-0 pointer-events-none" : "translate-y-0 opacity-100"} ${scrolled
@@ -904,7 +904,7 @@ export default function Portfolio() {
                                           <span className="text-muted-foreground/20">•</span>
                                           <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/40">
                                             <Calendar className="h-3 w-3" />
-                                            {formatExpDate(role.startDate)} \u2013 {role.endDate ? formatExpDate(role.endDate) : "o momento"}
+                                            {formatExpDate(role.startDate)} – {role.endDate ? formatExpDate(role.endDate) : "o momento"}
                                           </div>
                                         </div>
                                       </div>
@@ -929,7 +929,7 @@ export default function Portfolio() {
                                             <div className="flex flex-col gap-0.5">
                                               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">Período</span>
                                               <p className="text-xs font-black text-foreground tracking-tight">
-                                                {formatExpDate(role.startDate)} \u2013 {role.endDate ? formatExpDate(role.endDate) : "o momento"} \u00b7 {getDuration(role.startDate, role.endDate)}
+                                                {formatExpDate(role.startDate)} – {role.endDate ? formatExpDate(role.endDate) : "o momento"} · {getDuration(role.startDate, role.endDate)}
                                               </p>
                                             </div>
                                           </div>
