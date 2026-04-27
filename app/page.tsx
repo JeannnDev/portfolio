@@ -471,7 +471,7 @@ const projects = [
 ]
 
 const stats = [
-  { value: "2+", label: "Anos de Experiência" },
+  { value: "3+", label: "Anos de Experiência" },
   { value: "876h+", label: "Horas de aprendizado" },
   { value: "11+", label: "Projetos Reais" },
   { value: "15+", label: "Tecnologias" },
