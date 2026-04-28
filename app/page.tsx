@@ -359,7 +359,8 @@ const certificates: Certificate[] = [
     bgColor: "#01dbff",
     logoPadding: "p-0",
     courses: [
-      { name: "Totvs Fluig", url: "/images/Totvs%20Fluig.pdf" }
+      { name: "Integração TOTVS Fluig x TOTVS Protheus", url: "/images/Integracao%20TOTVS%20Fluig%20x%20TOTVS%20Protheus.pdf" },
+      { name: "Consumindo a API REST do TOTVS Fluig com Postman", url: "/images/Consumindo%20a%20API%20REST%20do%20TOTVS%20Fluig%20com%20Postman.pdf" }
     ]
   },
   {
