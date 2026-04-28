@@ -351,6 +351,18 @@ const certificates: Certificate[] = [
     ]
   },
   {
+    title: "Formações TOTVS",
+    institution: "TOTVS (Finalizado)",
+    date: "2026",
+    isGroup: true,
+    logo: "/images/totvs.png",
+    bgColor: "#01dbff",
+    logoPadding: "p-0",
+    courses: [
+      { name: "Totvs Fluig", url: "/images/Totvs%20Fluig.pdf" }
+    ]
+  },
+  {
     title: "Formações Protheus",
     institution: "Terminal da Informação (Em andamento)",
     date: "2025",
